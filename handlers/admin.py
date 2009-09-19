@@ -6,6 +6,7 @@ from google.appengine.api import memcache
 from models import blog
 import view
 
+
 class CreatePostHandler(webapp.RequestHandler):
 
     def get(self):
@@ -39,6 +40,7 @@ class CreatePostHandler(webapp.RequestHandler):
                 }
             page = view.Page()
             page.render(self, 'templates/admin/post_form.html', template_values)
+
 
 class EditPostHandler(webapp.RequestHandler):
 
@@ -123,6 +125,7 @@ class EditPostHandler(webapp.RequestHandler):
                 }
                 page = view.Page()
                 page.render(self, 'templates/admin/post_form.html', template_values)
+
 
 class ClearCacheHandler(webapp.RequestHandler):
 

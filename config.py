@@ -15,4 +15,6 @@ SETTINGS = {
     # Enable/disable Disqus-based commenting for posts
     # Set to your Disqus short name, or False to disable
     'disqus': False,
+    # Enable/disable debug mode
+    'debug': True,
 }

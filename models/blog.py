@@ -5,6 +5,7 @@ import markdown
 from google.appengine.ext import db
 from google.appengine.api import memcache
 
+
 def slugify(value):
     """
     Adapted from Django's django.template.defaultfilters.slugify.
@@ -13,6 +14,7 @@ def slugify(value):
     value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
     value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
     return re.sub('[-\s]+', '-', value)
+
 
 class Post(db.Model):
     title = db.StringProperty()
@@ -90,6 +92,8 @@ class Post(db.Model):
         if self.body_html == None and self.body != None:
             self.body_html = md.convert(self.body)
 
+
 class SlugConstraintViolation(Exception):
     def __init__(self, date, slug):
-        super(SlugConstraintViolation, self).__init__("Slug '%s' is not unique for date '%s'." % (slug, date.date()))
+        msg = "Slug '%s' is not unique for date '%s'." % (slug, date.date())
+        super(SlugConstraintViolation, self).__init__(msg)

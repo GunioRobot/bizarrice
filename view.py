@@ -11,6 +11,7 @@ from google.appengine.api import users
 import config
 from models import blog
 
+
 def get_archive_list():
     """Return a list of the archive months and their article counts."""
     # Attempt to get a memcache'd copy first
@@ -47,14 +48,16 @@ def get_archive_list():
         query.filter('pub_date >= ', current_date)
         query.filter('pub_date < ', next_date)
 
-        archive.append({'date': current_date,
-                        'count': query.count(1000),
-                        'url': '/blog/%04d/%02d' % (current_date.year, current_date.month),
-                       })
+        archive.append({
+            'date': current_date,
+            'count': query.count(1000),
+            'url': '/blog/%04d/%02d' % (current_date.year, current_date.month),
+        })
         current_date = next_date
 
     memcache.set('archive_list', archive)
     return archive
+
 
 def get_tag_list():
     """Return a list of the tags and their article counts"""
@@ -66,8 +69,8 @@ def get_tag_list():
     # Build a list of tags and their article counts
     tag_list = {}
     query = blog.Post.all()
-    for p in query:
-        for tag in p.tags:
+    for post in query:
+        for tag in post.tags:
             if tag in tag_list:
                 tag_list[tag] += 1
             else:
@@ -77,26 +80,29 @@ def get_tag_list():
     # and add each tag's URL
     sorted_tag_list = []
     for tag in sorted(tag_list.iterkeys()):
-        sorted_tag_list.append({'tag': tag,
-                                'count': tag_list[tag],
-                                'url': '/blog/tag/%s' % (tag),
-                               })
+        sorted_tag_list.append({
+            'tag': tag,
+            'count': tag_list[tag],
+            'url': '/blog/tag/%s' % (tag),
+        })
 
     memcache.set('tag_list', sorted_tag_list)
     return sorted_tag_list
 
-class Page:
+
+class Page():
 
     def render(self, handler, template_file, template_values={}):
         """Render a template"""
         archive_list = get_archive_list()
         tag_list = get_tag_list()
 
-        values = {'archive_list': archive_list,
-                  'tag_list': tag_list,
-                  'user': users.get_current_user(),
-                  'user_is_admin': users.is_current_user_admin(),
-                 }
+        values = {
+            'archive_list': archive_list,
+            'tag_list': tag_list,
+            'user': users.get_current_user(),
+            'user_is_admin': users.is_current_user_admin(),
+        }
 
         values.update({'settings': config.SETTINGS})
         values.update(template_values)
@@ -104,7 +110,8 @@ class Page:
         template_path = os.path.join(config.APP_ROOT_DIR, template_file)
         handler.response.out.write(template.render(template_path, values))
 
-    def render_paginated_query(self, handler, query, values_name, template_file, template_values={}):
+    def render_paginated_query(self, handler, query, values_name,
+                               template_file, template_values={}):
         """Paginate a query and render the requested page"""
         num = config.SETTINGS['items_per_page']
         offset = string.atoi(handler.request.get('offset') or str(0))

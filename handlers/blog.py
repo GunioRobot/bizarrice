@@ -2,9 +2,11 @@ import datetime
 import config
 import PyRSS2Gen
 
+from urlparse import urljoin
 from google.appengine.ext import webapp
 from models import blog
 import view
+
 
 class IndexHandler(webapp.RequestHandler):
 
@@ -12,11 +14,15 @@ class IndexHandler(webapp.RequestHandler):
         query = blog.Post.all()
         query.order('-pub_date')
 
-        template_values = {'page_title': 'Home',
-                          }
+        template_values = {
+            'page_title': 'Home',
+        }
 
         page = view.Page()
-        page.render_paginated_query(self, query, 'posts', 'templates/blog/index.html', template_values)
+        page.render_paginated_query(self, query, 'posts',
+                                    'templates/blog/index.html',
+                                    template_values)
+
 
 class PostHandler(webapp.RequestHandler):
 
@@ -38,16 +44,17 @@ class PostHandler(webapp.RequestHandler):
 
         post = query.get()
 
-        if post == None:
+        if post is None:
             page = view.Page()
             page.render_error(self, 404)
         else:
             template_values = {
                 'post': post,
-                }
+            }
 
             page = view.Page()
             page.render(self, 'templates/blog/post.html', template_values)
+
 
 class TagHandler(webapp.RequestHandler):
     def get(self, tag):
@@ -55,12 +62,16 @@ class TagHandler(webapp.RequestHandler):
         query.filter('tags = ', tag)
         query.order('-pub_date')
 
-        template_values = {'page_title': 'Posts tagged "%s"' % (tag),
-                           'page_description': 'Posts tagged "%s"' % (tag),
-                          }
+        template_values = {
+            'page_title': 'Posts tagged "%s"' % (tag),
+            'page_description': 'Posts tagged "%s"' % (tag),
+        }
 
         page = view.Page()
-        page.render_paginated_query(self, query, 'posts', 'templates/blog/index.html', template_values)
+        page.render_paginated_query(self, query, 'posts',
+                                    'templates/blog/index.html',
+                                    template_values)
+
 
 class YearHandler(webapp.RequestHandler):
 
@@ -77,12 +88,16 @@ class YearHandler(webapp.RequestHandler):
         query.filter('pub_date < ', end_date)
         query.order('-pub_date')
 
-        template_values = {'page_title': 'Yearly Post Archive: %d' % (year),
-                           'page_description': 'Yearly Post Archive: %d' % (year),
-                          }
+        template_values = {
+            'page_title': 'Yearly Post Archive: %d' % (year),
+            'page_description': 'Yearly Post Archive: %d' % (year),
+        }
 
         page = view.Page()
-        page.render_paginated_query(self, query, 'posts', 'templates/blog/index.html', template_values)
+        page.render_paginated_query(self, query, 'posts',
+                                    'templates/blog/index.html',
+                                    template_values)
+
 
 class MonthHandler(webapp.RequestHandler):
 
@@ -103,12 +118,16 @@ class MonthHandler(webapp.RequestHandler):
         query.order('-pub_date')
 
         month_text = start_date.strftime('%B %Y')
-        template_values = {'page_title': 'Monthly Post Archive: %s' % (month_text),
-                           'page_description': 'Monthly Post Archive: %s' % (month_text),
-                          }
+        template_values = {
+            'page_title': 'Monthly Post Archive: %s' % (month_text),
+            'page_description': 'Monthly Post Archive: %s' % (month_text),
+        }
 
         page = view.Page()
-        page.render_paginated_query(self, query, 'posts', 'templates/blog/index.html', template_values)
+        page.render_paginated_query(self, query, 'posts',
+                                    'templates/blog/index.html',
+                                    template_values)
+
 
 class DayHandler(webapp.RequestHandler):
 
@@ -129,37 +148,40 @@ class DayHandler(webapp.RequestHandler):
         query.order('-pub_date')
 
         day_text = start_date.strftime('%x')
-        template_values = {'page_title': 'Daily Post Archive: %s' % (day_text),
-                           'page_description': 'Daily Post Archive: %s' % (day_text),
-                          }
+        template_values = {
+            'page_title': 'Daily Post Archive: %s' % (day_text),
+            'page_description': 'Daily Post Archive: %s' % (day_text),
+        }
 
         page = view.Page()
-        page.render_paginated_query(self, query, 'posts', 'templates/blog/index.html', template_values)
+        page.render_paginated_query(self, query, 'posts',
+                                    'templates/blog/index.html',
+                                    template_values)
+
 
 class RSS2Handler(webapp.RequestHandler):
 
     def get(self):
-        
+
         query = blog.Post.all()
         query.order('-pub_date')
         posts = query.fetch(10)
 
         rss_items = []
         for post in posts:
-            item = PyRSS2Gen.RSSItem(title=post.title,
-                                     link="%s%s" % (config.SETTINGS['url'], post.get_absolute_url()),
-                                     description=post.excerpt_html or post.body_html,
-                                     guid=PyRSS2Gen.Guid("%s%s" % (config.SETTINGS['url'], post.get_absolute_url())),
-                                     pubDate=post.pub_date
-                                    )
+            title = post.title
+            link = urljoin(config.SETTINGS['url'], post.get_absolute_url())
+            description = post.excerpt_html or post.body_html
+            item = PyRSS2Gen.RSSItem(title, link, description,
+                                     guid=PyRSS2Gen.Guid(link),
+                                     pubDate=post.pub_date)
             rss_items.append(item)
 
         rss = PyRSS2Gen.RSS2(title=config.SETTINGS['title'],
                              link=config.SETTINGS['url'],
                              description=config.SETTINGS['description'],
                              lastBuildDate=datetime.datetime.now(),
-                             items=rss_items
-                            )
+                             items=rss_items)
         rss_xml = rss.to_xml()
         self.response.headers['Content-Type'] = 'application/rss+xml'
         self.response.out.write(rss_xml)
