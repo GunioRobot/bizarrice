@@ -7,6 +7,14 @@ from models import blog
 import view
 
 
+class AdminHandler(webapp.RequestHandler):
+    def get(self):
+        template_values = {
+            'posts': blog.Post.all().order('-pub_date')
+        }
+        page = view.Page()
+        page.render(self, 'templates/admin/index.html', template_values)
+
 class CreatePostHandler(webapp.RequestHandler):
 
     def get(self):

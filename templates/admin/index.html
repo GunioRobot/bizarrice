@@ -1,0 +1,19 @@
+{% extends "../base.html" %}
+{% block title %}Admin{% endblock %}
+{% block header %}<h1>Administration Panel</h1>{% endblock %}
+{% block content %}
+<div id="posts">
+    <h2>Creating</h2>
+    <ul>
+        <li><a href="/admin/post/new" title="Create a new post">Write a Post</a></li>
+        </ul>
+    <h2>Editing</h2>
+    <ul>
+        {% for post in posts %}
+        <li><a href="{{ post.get_edit_url }}" title="Edit post: {{ post.title }}">{{ post.title }}</a></li>
+        {% endfor %}
+    </ul>
+    <h2>Maintenance</h2>
+    <ul><li><a href="/admin/clear-cache" title="Clear Memcached Cache">Clear Cache</li></ul>
+</div>
+{% endblock %}
