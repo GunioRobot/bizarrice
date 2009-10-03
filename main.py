@@ -16,12 +16,12 @@ from handlers import blog, admin, error
 def main():
     application = webapp.WSGIApplication(
         [('/', blog.IndexHandler),
-         ('/blog/rss2', blog.RSS2Handler),
-         ('/blog/tag/([-\w]+)', blog.TagHandler),
-         ('/blog/(\d{4})', blog.YearHandler),
-         ('/blog/(\d{4})/(\d{2})', blog.MonthHandler),
-         ('/blog/(\d{4})/(\d{2})/(\d{2})', blog.DayHandler),
-         ('/blog/(\d{4})/(\d{2})/(\d{2})/([-\w]+)', blog.PostHandler),
+         ('/feeds', blog.RSS2Handler),
+         ('/tag/([-\w]+)', blog.TagHandler),
+         ('/(\d{4})', blog.YearHandler),
+         ('/(\d{4})/(\d{2})', blog.MonthHandler),
+         ('/(\d{4})/(\d{2})/(\d{2})', blog.DayHandler),
+         ('/(\d{4})/(\d{2})/(\d{2})/([-\w]+)', blog.PostHandler),
          ('/admin/clear-cache', admin.ClearCacheHandler),
          ('/admin/post/create', admin.CreatePostHandler),
          ('/admin/post/edit/(\d{4})/(\d{2})/(\d{2})/([-\w]+)',

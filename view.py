@@ -51,7 +51,7 @@ def get_archive_list():
         archive.append({
             'date': current_date,
             'count': query.count(1000),
-            'url': '/blog/%04d/%02d' % (current_date.year, current_date.month),
+            'url': '/%04d/%02d' % (current_date.year, current_date.month),
         })
         current_date = next_date
 
@@ -83,7 +83,7 @@ def get_tag_list():
         sorted_tag_list.append({
             'tag': tag,
             'count': tag_list[tag],
-            'url': '/blog/tag/%s' % (tag),
+            'url': '/tag/%s' % (tag),
         })
 
     memcache.set('tag_list', sorted_tag_list)

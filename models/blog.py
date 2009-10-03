@@ -31,7 +31,7 @@ class Post(db.Model):
     tags = db.StringListProperty()
 
     def get_absolute_url(self):
-        return "/blog/%04d/%02d/%02d/%s" % (self.pub_date.year,
+        return "/%04d/%02d/%02d/%s" % (self.pub_date.year,
                                             self.pub_date.month,
                                             self.pub_date.day,
                                             self.slug)
