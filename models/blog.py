@@ -32,9 +32,9 @@ class Post(db.Model):
 
     def get_absolute_url(self):
         return "/%04d/%02d/%02d/%s" % (self.pub_date.year,
-                                            self.pub_date.month,
-                                            self.pub_date.day,
-                                            self.slug)
+                                       self.pub_date.month,
+                                       self.pub_date.day,
+                                       self.slug)
 
     def get_edit_url(self):
         return "/admin/post/edit/%04d/%02d/%02d/%s" % (self.pub_date.year,
@@ -79,7 +79,7 @@ class Post(db.Model):
         count = query.count(1)
 
         # If any slug matches were found then an exception should be raised
-        if count == 1:
+        if count == 1 and not self.is_saved():
             raise SlugConstraintViolation(start_date, self.slug)
 
     def populate_html_fields(self):
@@ -87,9 +87,9 @@ class Post(db.Model):
         md = markdown.Markdown(extensions=['codehilite'])
 
         # Convert the excerpt and body Markdown into html
-        if self.excerpt_html == None and self.excerpt != None:
+        if self.excerpt is not None:
             self.excerpt_html = md.convert(self.excerpt)
-        if self.body_html == None and self.body != None:
+        if self.body is not None:
             self.body_html = md.convert(self.body)
 
 
