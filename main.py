@@ -7,7 +7,7 @@ import sys
 import import_wrapper
 import wsgiref.handlers
 from google.appengine.ext import webapp
-from handlers import blog, admin, error
+from controllers import blog, admin, error
 
 
 def main():
