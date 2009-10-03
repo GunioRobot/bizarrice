@@ -19,6 +19,7 @@
         <div id="content" class="span-16">
             {% block content %}{% endblock %}
         </div>
+        {% block sidebar %}
         <div id="sidebar" class="span-8 last">
             {% if archive_list %}
             <div id="archive-list">
@@ -41,6 +42,7 @@
             </div>
             {% endif %}
         </div>
+        {% endblock %}
         <div id="footer" class="span-24 last">
             &copy; {{ settings.author }} 2009 | <a href="/" title="Home">Home</a>
         </div>
