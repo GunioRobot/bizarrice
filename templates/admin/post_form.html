@@ -1,7 +1,7 @@
 {% extends "../base.html" %}
 
 {% block content %}
-<form method="post" action="{% if action %}{{ action }}{% else %}/admin/post/create{% endif %}">
+<form method="post" action="{% if action %}{{ action }}{% else %}/admin/post/new{% endif %}">
     <p>
         <label for="title">Title</label><br />
         <input type="text" class="title" name="title" id="title" value="{% if post %}{{ post.title }}{% endif %}" />

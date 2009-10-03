@@ -9,7 +9,6 @@ import view
 
 
 class IndexHandler(webapp.RequestHandler):
-
     def get(self):
         query = blog.Post.all()
         query.order('-pub_date')
@@ -25,7 +24,6 @@ class IndexHandler(webapp.RequestHandler):
 
 
 class PostHandler(webapp.RequestHandler):
-
     def get(self, year, month, day, slug):
         year = int(year)
         month = int(month)
@@ -74,7 +72,6 @@ class TagHandler(webapp.RequestHandler):
 
 
 class YearHandler(webapp.RequestHandler):
-
     def get(self, year):
         year = int(year)
 
@@ -100,7 +97,6 @@ class YearHandler(webapp.RequestHandler):
 
 
 class MonthHandler(webapp.RequestHandler):
-
     def get(self, year, month):
         year = int(year)
         month = int(month)
@@ -130,7 +126,6 @@ class MonthHandler(webapp.RequestHandler):
 
 
 class DayHandler(webapp.RequestHandler):
-
     def get(self, year, month, day):
         year = int(year)
         month = int(month)
@@ -160,9 +155,7 @@ class DayHandler(webapp.RequestHandler):
 
 
 class RSS2Handler(webapp.RequestHandler):
-
     def get(self):
-
         query = blog.Post.all()
         query.order('-pub_date')
         posts = query.fetch(10)

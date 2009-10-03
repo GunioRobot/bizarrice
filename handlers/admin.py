@@ -16,7 +16,6 @@ class AdminHandler(webapp.RequestHandler):
         page.render(self, 'templates/admin/index.html', template_values)
 
 class CreatePostHandler(webapp.RequestHandler):
-
     def get(self):
         page = view.Page()
         page.render(self, 'templates/admin/post_form.html')
