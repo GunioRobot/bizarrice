@@ -1,6 +1,6 @@
 import datetime
 import re
-import markdown
+from markdown2 import markdown
 
 from google.appengine.ext import db
 from google.appengine.api import memcache
@@ -83,14 +83,11 @@ class Post(db.Model):
             raise SlugConstraintViolation(start_date, self.slug)
 
     def populate_html_fields(self):
-        # Setup Markdown with the code highlighter
-        md = markdown.Markdown(extensions=['codehilite'])
-
         # Convert the excerpt and body Markdown into html
         if self.excerpt is not None:
-            self.excerpt_html = md.convert(self.excerpt)
+            self.excerpt_html = markdown(self.excerpt, extras=['code-color'])
         if self.body is not None:
-            self.body_html = md.convert(self.body)
+            self.body_html = markdown(self.body, extras=['code-color'])
 
 
 class SlugConstraintViolation(Exception):
