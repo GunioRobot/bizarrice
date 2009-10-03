@@ -9,19 +9,24 @@
     {% if posts %}
         {% for post in posts %}
         <div class="post">
-            <div class="date">{{ post.pub_date|date:"F d Y" }}</div>
-            <div class="title"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></div>
-            <div class="tags">Tags:{% for tag in post.tags %} <a href="/blog/tag/{{ tag }}">{{ tag }}</a>{% endfor %}</div>
-            {% ifnotequal post.excerpt None %}
-                <div class="excerpt">{{ post.excerpt_html }}</div>
+            <div class="datetime">{{ post.pub_date|date:"F d Y" }}<br />
+                Tags:{% for tag in post.tags %} <a href="/tag/{{ tag }}">{{ tag }}</a>{% endfor %}<br />
+            </div>
+            <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+            <p style="regular_post_body">
+                {% ifnotequal post.excerpt None %}
+                {{ post.excerpt_html }}
                 <div class="readmore"><a href="{{ post.get_absolute_url }}">Read more</a></div>
-            {% else %}
-                <div class="body">{{ post.body_html }}</div>
-            {% endifnotequal %}
+                {% else %}
+                {{ post.body_html }}
+                {% endifnotequal %}
+            </p>
         </div>
         {% endfor %}
     {% else %}
+    <div class="post">
         <h2>No Posts Found</h2>
+    </div>
     {% endif %}
     {% if prev_offset or next_offset %}
         <div class="span-16 last append-bottom">
