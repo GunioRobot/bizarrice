@@ -1,6 +1,13 @@
 {% extends "../base.html" %}
 
 {% block title %}{{ post.title }}{% endblock %}
+{% block head %}
+{% if settings.disqus and settings.debug %}
+<script type="text/javascript">
+    var disqus_developer=1;
+</script>
+{% endif %}
+{% endblock %}
 
 {% block content %}
     <div class="post">
