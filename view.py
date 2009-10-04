@@ -1,104 +1,28 @@
 import os
 import string
 import datetime
-from dateutil.relativedelta import *
 
 from google.appengine.ext.webapp import template
 from google.appengine.ext import db
 from google.appengine.api import memcache
 from google.appengine.api import users
+from dateutil.relativedelta import *
 
 import config
+import helpers
 from models import blog
-
-
-def get_archive_list():
-    """Return a list of the archive months and their article counts."""
-    # Attempt to get a memcache'd copy first
-    archive = memcache.get('archive_list')
-    if archive is not None:
-        return archive
-
-    # Get the date of the oldest post
-    query = db.Query(blog.Post)
-    query.order('pub_date')
-    oldest = query.get()
-
-    # Handle the situation where there are no posts
-    if oldest is None:
-        memcache.set('archive_list', [])
-        return []
-
-    # Create a date delta for moving ahead 1 month
-    plus_one_month = relativedelta(months=+1)
-
-    # Calculate the start and end dates for the archive
-    start_date = datetime.date(oldest.pub_date.year, oldest.pub_date.month, 1)
-    end_date = datetime.date.today()
-    end_date = datetime.date(end_date.year, end_date.month, 1) + plus_one_month
-
-    # Loop through each month in the time span and count the number
-    # of posts made in that month
-    archive = []
-    current_date = start_date
-    while current_date < end_date:
-        next_date = current_date + plus_one_month
-
-        query = db.Query(blog.Post)
-        query.filter('pub_date >= ', current_date)
-        query.filter('pub_date < ', next_date)
-
-        archive.append({
-            'date': current_date,
-            'count': query.count(1000),
-            'url': '/%04d/%02d' % (current_date.year, current_date.month),
-        })
-        current_date = next_date
-
-    memcache.set('archive_list', archive)
-    return archive
-
-
-def get_tag_list():
-    """Return a list of the tags and their article counts"""
-    # Attempt to get a memcache'd copy first
-    tag_list = memcache.get('tag_list')
-    if tag_list is not None:
-        return tag_list
-
-    # Build a list of tags and their article counts
-    tag_list = {}
-    query = blog.Post.all()
-    for post in query:
-        for tag in post.tags:
-            if tag in tag_list:
-                tag_list[tag] += 1
-            else:
-                tag_list[tag] = 1
-
-    # Sort the tag dictionary by name into a list
-    # and add each tag's URL
-    sorted_tag_list = []
-    for tag in sorted(tag_list.iterkeys()):
-        sorted_tag_list.append({
-            'tag': tag,
-            'count': tag_list[tag],
-            'url': '/tag/%s' % (tag),
-        })
-
-    memcache.set('tag_list', sorted_tag_list)
-    return sorted_tag_list
 
 
 class Page(object):
     def render(self, handler, template_file, template_values={}):
         """Render a template"""
-        archive_list = get_archive_list()
-        tag_list = get_tag_list()
+        #archive_list = get_archive_list()
+        #tag_list = get_tag_list()
 
         values = {
-            'archive_list': archive_list,
-            'tag_list': tag_list,
+            #'archive_list': archive_list,
+            #'tag_list': tag_list,
+            'page_list': helpers.get_page_list(),
             'user': users.get_current_user(),
             'user_is_admin': users.is_current_user_admin(),
         }

@@ -1,11 +1,12 @@
 import datetime
 import config
 import PyRSS2Gen
+import view
+import helpers
 
 from urlparse import urljoin
 from google.appengine.ext import webapp
 from models import blog
-import view
 
 
 class IndexHandler(webapp.RequestHandler):
@@ -16,7 +17,6 @@ class IndexHandler(webapp.RequestHandler):
         template_values = {
             'page_title': 'Home',
         }
-
         page = view.Page()
         page.render_paginated_query(self, query, 'posts',
                                     'templates/blog/index.html',
@@ -25,10 +25,7 @@ class IndexHandler(webapp.RequestHandler):
 
 class PageHandler(webapp.RequestHandler):
     def get(self, slug):
-        query = blog.Page.all()
-        query.filter('slug = ', slug)
-        p = query.get()
-
+        p = helpers.get_page(slug)
         page = view.Page()
         if p is None:
             page.render_error(self, 404)
@@ -41,24 +38,7 @@ class PageHandler(webapp.RequestHandler):
 
 class PostHandler(webapp.RequestHandler):
     def get(self, year, month, day, slug):
-        year = int(year)
-        month = int(month)
-        day = int(day)
-
-        # Build the time span to check for the given slug
-        start_date = datetime.datetime(year, month, day)
-        time_delta = datetime.timedelta(days=1)
-        end_date = start_date + time_delta
-
-        # Create a query to check for slug uniqueness in the specified time
-        # span
-        query = blog.Post.all()
-        query.filter('pub_date >= ', start_date)
-        query.filter('pub_date < ', end_date)
-        query.filter('slug = ', slug)
-
-        post = query.get()
-
+        post = helpers.get_post(year, month, day, slug)
         if post is None:
             page = view.Page()
             page.render_error(self, 404)
@@ -66,7 +46,6 @@ class PostHandler(webapp.RequestHandler):
             template_values = {
                 'post': post,
             }
-
             page = view.Page()
             page.render(self, 'templates/blog/post.html', template_values)
 

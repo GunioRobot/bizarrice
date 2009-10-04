@@ -71,14 +71,17 @@ class Page(Publishable):
 
     body = db.TextProperty()
     body_html = db.TextProperty()
+    # The order in which it'll be listed
+    index = db.IntegerProperty()
 
     def get_absolute_url(self):
         return "/%s" % self.slug
 
     def get_edit_url(self):
-        return "/admin/page/edit/%s" % self.get_absolute_url()
+        return "/admin/page/edit%s" % self.get_absolute_url()
 
     def put(self):
+        memcache.delete('page_list')
         self.test_slug_collision(False)
         return super(Page, self).put()
 
@@ -102,7 +105,7 @@ class Post(Publishable):
                                        self.slug)
 
     def get_edit_url(self):
-        return "/admin/post/edit/%s" % self.get_absolute_url()
+        return "/admin/post/edit%s" % self.get_absolute_url()
 
     def put(self):
         # Delete the cached archive list if we are saving a new post

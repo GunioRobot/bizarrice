@@ -1,0 +1,40 @@
+{% extends "../base.html" %}
+
+{% block content %}
+<form method="post" action="{% if action %}{{ action }}{% else %}/admin/page/new{% endif %}">
+    <p>
+        <label for="title">Title</label><br />
+        <input type="text" class="title" name="title" id="title" value="{% if page %}{{ page.title }}{% endif %}" />
+    </p>
+    <p>
+        <label for="slug">Slug</label> (leave blank to auto-generate)<br />
+        <input type="text" class="text" name="slug" id="slug" value="{% if page %}{{ page.slug }}{% endif %}" />
+    </p>
+    <p>
+        <label for="slug">Index</label> (The position in which it'll be listed. Default=0)<br />
+        <input type="text" class="text" name="index" id="index" value="{% if page %}{{ page.index }}{% endif %}" />
+    </p>
+    <p>
+        <label for="body">Body</label><br />
+        <textarea name="body" id="body" rows="5" cols="25">{% if page %}{% if page.body %}{{ page.body }}{% endif %}{% endif %}</textarea>
+    </p>
+    <p>
+        <input type="submit" name="submit" value="Submit">
+        <input type="submit" name="submit" value="Preview">
+    </p>
+</form>
+
+    {% if page %}
+    <div class="post">
+        <h1>Title</h1>
+        <div class="title">{% if page.title %}{{ page.title }}{% endif %}</div>
+        <br />
+        <h1>Slug</h1>
+        <div class="slug">{% if page.slug %}{{ page.slug }}{% endif %}</div>
+        <br />
+        <h1>Body</h1>
+        <div class="body">{% if page.body_html %}{{ page.body_html }}{% endif %}</div>
+    </div>
+    {% endif %}
+
+{% endblock %}
