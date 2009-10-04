@@ -21,7 +21,7 @@ def main():
          ('/(\d{4})/(\d{2})', blog.MonthHandler),
          ('/(\d{4})/(\d{2})/(\d{2})', blog.DayHandler),
          ('/(\d{4})/(\d{2})/(\d{2})/([-\w]+)', blog.PostHandler),
-         ('/admin', admin.AdminHandler),
+         ('/admin/?', admin.AdminHandler),
          ('/admin/clear-cache', admin.ClearCacheHandler),
          ('/admin/post/new', admin.CreatePostHandler),
          ('/admin/post/edit/(\d{4})/(\d{2})/(\d{2})/([-\w]+)',

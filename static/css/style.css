@@ -11,6 +11,8 @@ img a { text-decoration: none !important; background: #fff !important; margin: 0
 input { border: 1px solid #999; }
 .photo a, .disqus a { text-decoration: none !important; background: #fff !important; }
 .header { margin-bottom: 20px; }
+.header a {color: #666; background: none; font-size: 36px; }
+.header a:hover {color:#333; text-decoration: none; padding: 1px 2px; background: #f9fc7e; }
 .wrapper { width: 520px; margin: auto; }
 .main { margin: 50px 0px; }
 .datetime { font-size: 12px; line-height: 150%; color: #666; position:relative; float:left; margin-left:-250px; padding-right: 25px; border-right: 1px solid #999; width: 200px; text-align: right; clear: both; }
