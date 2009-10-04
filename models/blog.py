@@ -1,6 +1,7 @@
 import datetime
 import re
 import logging
+import smartypants
 from markdown2 import markdown
 
 from google.appengine.ext import db
@@ -35,6 +36,7 @@ class Publishable(polymodel.PolyModel):
                 continue
             if getattr(self, key) is not None:
                 data = markdown(getattr(self, key), extras=['code-color'])
+                data = smartypants.smartyPants(data)
                 setattr(self, value, data)
 
     def test_slug_collision(self, limit_by_day=False):

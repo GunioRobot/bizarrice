@@ -1,5 +1,5 @@
 body, html { background: #fff; margin:0px; padding:0px; border:0px; font-family: Georgia, 'Times New Roman', Times; font-size:16px; line-height:150%; color:#333; }
-pre { font-size: 10px; }
+pre { font-size: 14px; line-height: 100%; margin-left: 20px; }
 a { color:#333; text-decoration: none; padding: 1px 2px; background: #f9fc7e; }
 a:hover { color: #666; background: none; }
 h1 { color:#666; font-weight: normal; margin-bottom:0px; }
@@ -29,7 +29,5 @@ a .notes { text-decoration: none !important; background: none; }
 img .notes { margin: 0px; padding: 3px; border: 1px solid #999; } 
 .notes img { margin: 0px; padding: 3px; border: 1px solid #999; } 
 .disqus { font-family: Georgia, 'Times New Roman', Times !important; size: 16px; line-height:150% !important; color:#333 !important; }
-.regular_post_body img {
-max-width: 100%;
-}
-#disqus_thread a { background-color:#FFF}
+.regular_post_body img { max-width: 100%; }
+#disqus_thread a { text-decoration: none !important; background: #fff !important; }

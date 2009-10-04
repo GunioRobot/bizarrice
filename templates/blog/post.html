@@ -11,15 +11,20 @@
 
 {% block content %}
     <div class="post">
-        <div class="date">{{ post.pub_date|date:"F d Y" }}</div>
-        {% if user_is_admin %}
-            <div class="admin">
-                <a href="{{ post.get_edit_url }}">edit post</a>
-            </div>
-        {% endif %}
-        <div class="title">{{ post.title }}</div>
-        <div class="tags">Tags:{% for tag in post.tags %} <a href="/blog/tag/{{ tag }}">{{ tag }}</a>{% endfor %}</div>
-        <div class="body">{{ post.body_html }}</div>
+        <div class="datetime">
+            <a href="{{ post.get_absolute_url }}" title="{{ post.title }}">permalink</a><br />
+            {{ post.pub_date|tz_date:"%Y, %b %d at %H:%M" }}<br />
+            Tags:{% for tag in post.tags %} <a href="/tag/{{ tag }}">{{ tag }}</a>{% endfor %}<br />
+        </div>
+        <h2>{{ post.title }}</h2>
+        <p style="regular_post_body">
+            {% ifnotequal post.excerpt None %}
+            {{ post.excerpt_html }}
+            <div class="readmore"><a href="{{ post.get_absolute_url }}">Read more</a></div>
+            {% else %}
+            {{ post.body_html }}
+            {% endifnotequal %}
+        </p>
     </div>
     {% if settings.disqus %}
         <div id="disqus_thread">
