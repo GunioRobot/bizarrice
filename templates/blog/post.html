@@ -22,8 +22,9 @@
         <div class="body">{{ post.body_html }}</div>
     </div>
     {% if settings.disqus %}
-        <div id="disqus_thread"></div>
+        <div id="disqus_thread">
         <script type="text/javascript" src="http://disqus.com/forums/{{ settings.disqus }}/embed.js"></script>
         <noscript><a href="http://{{ settings.disqus }}.disqus.com/?url=ref">View the discussion thread.</a></noscript>
+        </div>
     {% endif %}
 {% endblock %}

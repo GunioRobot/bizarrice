@@ -32,3 +32,4 @@ img .notes { margin: 0px; padding: 3px; border: 1px solid #999; }
 .regular_post_body img {
 max-width: 100%;
 }
+#disqus_thread a { background-color:#FFF}
