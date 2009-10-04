@@ -1,11 +1,11 @@
 import datetime
 import config
-import PyRSS2Gen
 import view
 import helpers
 
 from urlparse import urljoin
 from google.appengine.ext import webapp
+from google.appengine.api import memcache
 from models import blog
 
 
@@ -150,27 +150,18 @@ class DayHandler(webapp.RequestHandler):
                                     template_values)
 
 
-class RSS2Handler(webapp.RequestHandler):
+class AtomHandler(webapp.RequestHandler):
     def get(self):
-        query = blog.Post.all()
-        query.order('-pub_date')
-        posts = query.fetch(10)
+        template_values = memcache.get('atom')
+        if template_values is None:
+            query = blog.Post.all().order('-pub_date')
+            posts = query.fetch(10)
+            template_values = {
+                'posts': posts,
+                'updated': posts[0].updated,
+            }
+            memcache.set('atom', template_values)
+        page = view.Page()
+        self.response.headers["Content-Type"] = "application/atom+xml"
+        page.render(self, 'templates/blog/atom.xml', template_values)
 
-        rss_items = []
-        for post in posts:
-            title = post.title
-            link = urljoin(config.SETTINGS['url'], post.get_absolute_url())
-            description = post.excerpt_html or post.body_html
-            item = PyRSS2Gen.RSSItem(title, link, description,
-                                     guid=PyRSS2Gen.Guid(link),
-                                     pubDate=post.pub_date)
-            rss_items.append(item)
-
-        rss = PyRSS2Gen.RSS2(title=config.SETTINGS['title'],
-                             link=config.SETTINGS['url'],
-                             description=config.SETTINGS['description'],
-                             lastBuildDate=datetime.datetime.now(),
-                             items=rss_items)
-        rss_xml = rss.to_xml()
-        self.response.headers['Content-Type'] = 'application/rss+xml'
-        self.response.out.write(rss_xml)
