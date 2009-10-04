@@ -13,9 +13,7 @@ Install Instructions:
 
 1. Edit app.yaml and change the application name to the correct
    name for your application
-
 2. Edit config.py and change the default settings
-
 3. Run like any other GAE app
 
 Credits
