@@ -22,6 +22,7 @@ class Publishable(polymodel.PolyModel):
     title = db.StringProperty()
     slug = db.StringProperty()
     pub_date = db.DateTimeProperty(auto_now_add=True)
+    updated = db.DateTimeProperty(auto_now=True)
     author = db.UserProperty(auto_current_user_add=True)
 
     slug_unique_for_date = False
@@ -35,7 +36,8 @@ class Publishable(polymodel.PolyModel):
                               % self.__class__.__name__)
                 continue
             if getattr(self, key) is not None:
-                data = markdown(getattr(self, key), extras=['code-color'])
+                data = markdown(getattr(self, key), extras=['code-color',
+                                                            'footnotes'])
                 data = smartypants.smartyPants(data)
                 setattr(self, value, data)
 
@@ -115,6 +117,7 @@ class Post(Publishable):
             memcache.delete('archive_list')
         # Delete the cached tag list whenever a post is created/updated
         memcache.delete('tag_list')
+        memcache.delete('atom')
 
         self.test_slug_collision(True)
         return super(Post, self).put()

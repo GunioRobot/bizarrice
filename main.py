@@ -15,7 +15,7 @@ def main():
     webapp.template.register_template_library('templatefilters')
     application = webapp.WSGIApplication(
         [('/', blog.IndexHandler),
-         ('/feed', blog.RSS2Handler),
+         ('/feed', blog.AtomHandler),
          ('/tag/([-\w]+)', blog.TagHandler),
          ('/(\d{4})', blog.YearHandler),
          ('/(\d{4})/(\d{2})', blog.MonthHandler),
