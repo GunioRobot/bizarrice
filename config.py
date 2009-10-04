@@ -18,5 +18,8 @@ SETTINGS = {
     # Set to your Disqus short name, or False to disable
     'disqus': 'caio',
     # Enable/disable debug mode
-    'debug': True,
+    'debug': False,
+    # Set your Timezone. Set False to use the default (UTC)
+    # http://en.wikipedia.org/wiki/List_of_zoneinfo_timezones (TZ column)
+    'timezone': 'America/Sao_Paulo',
 }
