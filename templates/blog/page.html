@@ -4,13 +4,9 @@
 
 {% block content %}
     <div class="post">
-        <div class="date">{{ page.pub_date|date:"F d Y" }}</div>
-        {% if user_is_admin %}
-            <div class="admin">
-                <a href="{{ page.get_edit_url }}">edit page</a>
-            </div>
-        {% endif %}
-        <div class="title">{{ page.title }}</div>
-        <div class="body">{{ page.body_html }}</div>
+        <h2>{{ page.title }}</h2>
+        <p style="regular_post_body">
+            {{ page.body_html }}
+        </p>
     </div>
 {% endblock %}

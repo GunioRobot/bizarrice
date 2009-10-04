@@ -11,6 +11,7 @@ class AdminHandler(webapp.RequestHandler):
     def get(self):
         template_values = {
             'posts': blog.Post.all().order('-pub_date'),
+            'pages': blog.Page.all().order('index'),
         }
         page = view.Page()
         page.render(self, 'templates/admin/index.html', template_values)
@@ -29,7 +30,10 @@ class CreatePageHandler(webapp.RequestHandler):
         if slug == '':
             slug = blog.slugify(new_page.title)
         new_page.slug = slug
-        new_page.index = int(self.request.get('index', 0))
+        index = self.request.get('index').strip()
+        if index == '':
+            index = 0
+        new_page.index = int(index)
 
         new_page.put()
         if self.request.get('submit') == 'Submit':

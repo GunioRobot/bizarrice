@@ -9,9 +9,16 @@
         <li><a href="/admin/page/new" title="Create a new page">Create a Page</a></li>
     </ul>
     <h2>Editing</h2>
+    <h3>Posts</h3>
     <ul>
         {% for post in posts %}
         <li><a href="{{ post.get_edit_url }}" title="Edit post: {{ post.title }}">{{ post.title }}</a></li>
+        {% endfor %}
+    </ul>
+    <h3>Pages</h3>
+    <ul>
+        {% for page in pages %}
+        <li><a href="{{ page.get_edit_url }}" title="Edit page: {{ page.title }}">{{ page.title }}</a></li>
         {% endfor %}
     </ul>
     <h2>Maintenance</h2>
