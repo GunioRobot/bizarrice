@@ -90,8 +90,7 @@ def get_tag_list():
     return sorted_tag_list
 
 
-class Page():
-
+class Page(object):
     def render(self, handler, template_file, template_values={}):
         """Render a template"""
         archive_list = get_archive_list()
