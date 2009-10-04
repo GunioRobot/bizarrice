@@ -28,6 +28,9 @@ def main():
           admin.EditPostHandler),
          ('/admin/page/new', admin.CreatePageHandler),
          ('/admin/page/edit/([-\w]+)', admin.EditPageHandler),
+         ('/admin/delete/post/(\d{4})/(\d{2})/(\d{2})/([-\w]+)',
+          admin.DeletePostHandler),
+         ('/admin/delete/page/([-\w]+)', admin.DeletePageHandler),
          ('/([-\w]+)', blog.PageHandler),
          # If we make it this far then the page we are looking
          # for does not exist

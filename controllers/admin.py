@@ -1,5 +1,6 @@
 import view
 import helpers
+import config
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
@@ -47,11 +48,20 @@ class CreatePageHandler(webapp.RequestHandler):
                         template_values)
 
 
+class DeletePageHandler(webapp.RequestHandler):
+    def get(self, slug):
+        p = helpers.get_page(slug)
+        if p is not None:
+            p.delete()
+        memcache.flush_all()
+        self.redirect(config.SETTINGS['url'])
+
+
 class EditPageHandler(webapp.RequestHandler):
     def get(self, slug):
         p = helpers.get_page(slug)
         page = view.Page()
-        if p == None:
+        if p is None:
             page.render_error(self, 404)
         else:
             template_values = {
@@ -120,6 +130,15 @@ class CreatePostHandler(webapp.RequestHandler):
             page = view.Page()
             page.render(self, 'templates/admin/post_form.html',
                         template_values)
+
+
+class DeletePostHandler(webapp.RequestHandler):
+    def get(self, year, month, day, slug):
+        p = helpers.get_post(year, month, day, slug)
+        if p is not None:
+            p.delete()
+        memcache.flush_all()
+        self.redirect(config.SETTINGS['url'])
 
 
 class EditPostHandler(webapp.RequestHandler):
