@@ -4,6 +4,7 @@ Bizarrice
 A Google App Engine/webapp Blog
 
 Originally created by Joey Bratton <http://www.joeyb.org>
+
 Currently maintained by Caio Romão <http://blog.caioromao.com>
 
 Licensed under the MIT License

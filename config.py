@@ -5,21 +5,27 @@ import os
 APP_ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
 
 SETTINGS = {
-    'title': 'Caio Romão\'s Blog',
-    'description': 'No proper description set',
-    'author': 'Caio Romão',
-    'email': 'caioromao@gmail.com',
-    'url': 'http://blog.caioromao.com',
+    'title': 'Blog Title',
+    'description': 'Description',
+    'author': 'Author',
+    'email': 'Email',
+    'url': 'BlogURL',
     'items_per_page': 10,
     # Enable/disable Google Analytics
     # Set to your tracking code (UA-xxxxxx-x), or False to disable
-    'google_analytics': 'UA-4613689-4',
+    'google_analytics': False,
     # Enable/disable Disqus-based commenting for posts
     # Set to your Disqus short name, or False to disable
-    'disqus': 'caio',
+    'disqus': False,
     # Enable/disable debug mode
     'debug': True,
     # Set your Timezone. Set False to use the default (UTC)
     # http://en.wikipedia.org/wiki/List_of_zoneinfo_timezones (TZ column)
-    'timezone': 'America/Sao_Paulo',
+    'timezone': False,
 }
+
+try:
+    import local_config
+    SETTINGS.update(local_config.SETTINGS)
+except ImportError:
+    pass
