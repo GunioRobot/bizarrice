@@ -87,6 +87,7 @@ class Page(Publishable):
     def put(self):
         memcache.delete('page_list')
         self.test_slug_collision(False)
+        memcache.delete('page-%s' % self.slug)
         return super(Page, self).put()
 
 
@@ -120,6 +121,7 @@ class Post(Publishable):
         memcache.delete('atom')
 
         self.test_slug_collision(True)
+        memcache.delete('post-%s' % self.slug)
         return super(Post, self).put()
 
 

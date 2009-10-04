@@ -13,26 +13,34 @@ from models import blog
 
 
 def get_post(year, month, day, slug):
-    year = int(year)
-    month = int(month)
-    day = int(day)
+    post = memcache.get('post-%s' % slug)
+    if post is None:
+        year = int(year)
+        month = int(month)
+        day = int(day)
 
-    # Build the time span to check for the given slug
-    start_date = datetime.datetime(year, month, day)
-    time_delta = datetime.timedelta(days=1)
-    end_date = start_date + time_delta
+        # Build the time span to check for the given slug
+        start_date = datetime.datetime(year, month, day)
+        time_delta = datetime.timedelta(days=1)
+        end_date = start_date + time_delta
 
-    # Create a query to check for slug uniqueness in the specified time span
-    query = blog.Post.all()
-    query.filter('pub_date >= ', start_date)
-    query.filter('pub_date < ', end_date)
-    query.filter('slug = ', slug)
-    return query.get()
+        # Create a query to check for slug uniqueness in the specified time span
+        query = blog.Post.all()
+        query.filter('pub_date >= ', start_date)
+        query.filter('pub_date < ', end_date)
+        query.filter('slug = ', slug)
+        post = query.get()
+        memcache.set('post-%s' % slug, post)
+    return post
 
 def get_page(slug):
-    query = blog.Page.all()
-    query.filter('slug = ', slug)
-    return query.get()
+    page = memcache.get('page-%s' % slug)
+    if page is None:
+        query = blog.Page.all()
+        query.filter('slug = ', slug)
+        page = query.get()
+        memcache.set('page-%s' % slug, page)
+    return page
 
 def get_archive_list():
     """Return a list of the archive months and their article counts."""
