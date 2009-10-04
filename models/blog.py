@@ -76,7 +76,7 @@ class Page(Publishable):
         return "/%s" % self.slug
 
     def get_edit_url(self):
-        return "/admin/page/edit/%s" % self.slug
+        return "/admin/page/edit/%s" % self.get_absolute_url()
 
     def put(self):
         self.test_slug_collision(False)
@@ -102,10 +102,7 @@ class Post(Publishable):
                                        self.slug)
 
     def get_edit_url(self):
-        return "/admin/post/edit/%04d/%02d/%02d/%s" % (self.pub_date.year,
-                                                       self.pub_date.month,
-                                                       self.pub_date.day,
-                                                       self.slug)
+        return "/admin/post/edit/%s" % self.get_absolute_url()
 
     def put(self):
         # Delete the cached archive list if we are saving a new post

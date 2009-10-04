@@ -23,6 +23,22 @@ class IndexHandler(webapp.RequestHandler):
                                     template_values)
 
 
+class PageHandler(webapp.RequestHandler):
+    def get(self, slug):
+        query = blog.Page.all()
+        query.filter('slug = ', slug)
+        p = query.get()
+
+        page = view.Page()
+        if p is None:
+            page.render_error(self, 404)
+        else:
+            template_values = {
+                'page': p,
+            }
+            page.render(self, 'templates/blog/page.html', template_values)
+
+
 class PostHandler(webapp.RequestHandler):
     def get(self, year, month, day, slug):
         year = int(year)
@@ -34,7 +50,8 @@ class PostHandler(webapp.RequestHandler):
         time_delta = datetime.timedelta(days=1)
         end_date = start_date + time_delta
 
-        # Create a query to check for slug uniqueness in the specified time span
+        # Create a query to check for slug uniqueness in the specified time
+        # span
         query = blog.Post.all()
         query.filter('pub_date >= ', start_date)
         query.filter('pub_date < ', end_date)

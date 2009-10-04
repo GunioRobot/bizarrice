@@ -15,6 +15,33 @@ class AdminHandler(webapp.RequestHandler):
         page = view.Page()
         page.render(self, 'templates/admin/index.html', template_values)
 
+
+class CreatePageHandler(webapp.RequestHandler):
+    def get(self):
+        page = view.Page()
+        page.render(self, 'templates/admin/page_form.html')
+
+    def post(self):
+        new_page = blog.Page()
+        new_page.title = self.request.get('title')
+        new_page.body = self.request.get('body')
+        slug = self.request.get('slug').strip()
+        if slug == '':
+            slug = blog.slugify(new_post.title)
+        new_page.slug = slug
+
+        new_page.put()
+        if self.request.get('submit') == 'Submit':
+            self.redirect(new_post.get_absolute_url())
+        else:
+            template_values = {
+                'page': new_page,
+                }
+            page = view.Page()
+            page.render(self, 'templates/admin/page_form.html',
+                        template_values)
+
+
 class CreatePostHandler(webapp.RequestHandler):
     def get(self):
         page = view.Page()
@@ -37,16 +64,16 @@ class CreatePostHandler(webapp.RequestHandler):
 
         new_post.tags = self.request.get('tags').split()
 
+        new_post.put()
         if self.request.get('submit') == 'Submit':
-            new_post.put()
             self.redirect(new_post.get_absolute_url())
         else:
-            new_post.populate_html_fields()
             template_values = {
                 'post': new_post,
-                }
+            }
             page = view.Page()
-            page.render(self, 'templates/admin/post_form.html', template_values)
+            page.render(self, 'templates/admin/post_form.html',
+                        template_values)
 
 
 class EditPostHandler(webapp.RequestHandler):
@@ -73,12 +100,10 @@ class EditPostHandler(webapp.RequestHandler):
             page = view.Page()
             page.render_error(self, 404)
         else:
-            action_url = "/admin/post/edit%s" % post.get_absolute_url()
-
             template_values = {
-                'action': action_url,
+                'action': post.get_edit_url()
                 'post': post,
-                }
+            }
 
             page = view.Page()
             page.render(self, 'templates/admin/post_form.html', template_values)
@@ -105,7 +130,6 @@ class EditPostHandler(webapp.RequestHandler):
             page = view.Page()
             page.render_error(self, 404)
         else:
-            action_url = "/admin/post/edit%s" % post.get_absolute_url()
             post.title = self.request.get('title')
             post.body = self.request.get('body')
 
@@ -121,20 +145,20 @@ class EditPostHandler(webapp.RequestHandler):
 
             post.tags = self.request.get('tags').split()
 
+            post.put()
             if self.request.get('submit') == 'Submit':
-                post.put()
                 self.redirect(post.get_absolute_url())
             else:
-                post.populate_html_fields()
                 template_values = {
-                    'action': action_url,
+                    'action': post.get_edit_url(),
                     'post': post,
                 }
                 page = view.Page()
-                page.render(self, 'templates/admin/post_form.html', template_values)
+                page.render(self, 'templates/admin/post_form.html',
+                            template_values)
 
 
 class ClearCacheHandler(webapp.RequestHandler):
-
     def get(self):
         memcache.flush_all()
+
