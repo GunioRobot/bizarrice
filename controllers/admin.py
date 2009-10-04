@@ -169,4 +169,5 @@ class EditPostHandler(webapp.RequestHandler):
 class ClearCacheHandler(webapp.RequestHandler):
     def get(self):
         memcache.flush_all()
+        self.redirect('/admin')
 
