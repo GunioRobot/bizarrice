@@ -1,10 +1,15 @@
-Google App Engine/webapp Blog
+Bizarrice
+=========
 
-Created by Joey Bratton <http://www.joeyb.org>
+A Google App Engine/webapp Blog
+
+Originally created by Joey Bratton <http://www.joeyb.org>
+Currently maintained by Caio Romão <http://blog.caioromao.com>
 
 Licensed under the MIT License
 
 Install Instructions:
+---------------------
 
 1. Edit app.yaml and change the application name to the correct
    name for your application
@@ -13,7 +18,8 @@ Install Instructions:
 
 3. Run like any other GAE app
 
-Credits:
+Credits
+-------
 
 Several ideas on the code structure/layout for this application
 were borrowed from Bloog <http://bloog.billkatz.com/>, which is
@@ -22,11 +28,11 @@ another GAE-based blog.
 This application makes use of several 3rd party libraries.
 The following libraries are included:
 
-Markdown 2.0.1
-Pygments 1.0
-Dateutil 1.4.1
-PyRSS2Gen 1.0.0
-BlueprintCSS 0.9
+* python-markdown2
+* Pygments
+* Dateutil
+* smartypants
+* pytz
 
 Building this blog was much easier because of the authors of
 those libraries.  Thanks!
