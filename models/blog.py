@@ -25,8 +25,6 @@ class Publishable(polymodel.PolyModel):
     updated = db.DateTimeProperty(auto_now=True)
     author = db.UserProperty(auto_current_user_add=True)
 
-    slug_unique_for_date = False
-
     def update_markdown_fields(self):
         if not hasattr(self, 'markdown_map'):
             return

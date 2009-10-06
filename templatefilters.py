@@ -12,6 +12,10 @@ from django.utils.translation import ngettext
 register = template.create_template_register()
 
 @register.filter
+def rfc3339(date):
+    return date.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+@register.filter
 def tz_date(date, fmt="%F %d %Y %H:%M"):
     tz = memcache.get('tz')
     if tz is None:

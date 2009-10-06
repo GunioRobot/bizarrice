@@ -2,12 +2,12 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <title><![CDATA[{{settings.title}}]]></title>
     <subtitle type="text"><![CDATA[{{settings.description}}]]></subtitle>
-    <updated>{{ updated|tz_date:"%Y-%m-%dT%H:%M:%SZ" }}</updated>
+    <updated>{{ updated|rfc3339 }}</updated>
     <id>{{ settings.url }}/</id>
-    <link rel="alternate" href="{{ settings.url }}" title="{{ settings.title }}" type="text/html"/>
-    <link rel="self" href="{{ settings.url }}/feed" title="{{ settings.title }} Atom Feed" type="application/atom+xml"/>
-    <link rel="hub" href="http://pubsubhubbub.appspot.com"/>
-    <link rel="hub" href="http://hubbub.api.typepad.com/"/>
+    <link rel="alternate" href="{{ settings.url }}" title="{{ settings.title }}" type="text/html" />
+    <link rel="self" href="{{ settings.url }}/feed" title="{{ settings.title }} Atom Feed" type="application/atom+xml" />
+    <link rel="hub" href="http://pubsubhubbub.appspot.com" />
+    <link rel="hub" href="http://hubbub.api.typepad.com/" />
     <author>
         <name><![CDATA[{{settings.author}}]]></name>
         <email>{{settings.email}}</email>
@@ -19,9 +19,9 @@
     <entry>
         <id>{{ settings.url }}{{ post.get_absolute_url }}</id>
         <title type="text"><![CDATA[{{post.title}}]]></title>
-        <link href="{{ settings.url }}{{ post.get_absolute_url }}" rel="alternate" type="text/html"/>
-        <updated>{{ post.updated|tz_date:"%Y-%m-%dT%H:%M:%SZ" }}</updated>
-        <published>{{ post.pub_date|tz_date:"%Y-%m-%dT%H:%M:%SZ" }}</published>
+        <link href="{{ settings.url }}{{ post.get_absolute_url }}" rel="alternate" type="text/html" />
+        <updated>{{ post.updated|rfc3339 }}</updated>
+        <published>{{ post.pub_date|rfc3339 }}</published>
         <content type="html"><![CDATA[{{ post.body_html }}]]></content>
         <author>
             <name><![CDATA[{{settings.author}}]]></name>
