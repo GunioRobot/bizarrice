@@ -11,6 +11,7 @@
         <div class="post">
             <div class="datetime">{{ post.pub_date|tz_date:"%b %d %Y %H:%M" }}<br />
                 Tags:{% for tag in post.tags %} <a href="/tag/{{ tag }}">{{ tag }}</a>{% endfor %}<br />
+                {% if settings.disqus %}<a href="{{settings.url}}{{post.get_absolute_url}}#disqus_thread">Comments</a>{% endif %}
             </div>
             <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
             <p style="regular_post_body">
@@ -39,3 +40,21 @@
         </div>
     {% endif %}
 {% endblock %}
+{% if settings.disqus %}
+{% block bodyend %}
+<script type="text/javascript">
+//<![CDATA[
+(function() {
+	var links = document.getElementsByTagName('a');
+	var query = '?';
+	for(var i = 0; i < links.length; i++) {
+	if(links[i].href.indexOf('#disqus_thread') >= 0) {
+		query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
+	}
+	}
+	document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/caio/get_num_replies.js' + query + '"></' + 'script>');
+})();
+//]]>
+</script>
+{% endblock %}
+{% endif %}
