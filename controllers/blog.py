@@ -150,6 +150,15 @@ class DayHandler(webapp.RequestHandler):
                                     template_values)
 
 
+class FeedburnerHandler(webapp.RequestHandler):
+    def get(self):
+        if not config.SETTINGS.get('feedburner'):
+            self.redirect("/atom.xml", permanent=True)
+        else:
+            self.redirect("http://feeds.feedburner.com/caioromao",
+                          permanent=True)
+
+
 class AtomHandler(webapp.RequestHandler):
     def get(self):
         template_values = memcache.get('atom')

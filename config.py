@@ -22,6 +22,9 @@ SETTINGS = {
     # Set your Timezone. Set False to use the default (UTC)
     # http://en.wikipedia.org/wiki/List_of_zoneinfo_timezones (TZ column)
     'timezone': False,
+    # Enable/Disable using feedburner to publish feeds
+    # Set to your Feedburner shortname, or False to disable
+    'feedburner': False,
 }
 
 try:
