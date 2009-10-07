@@ -35,11 +35,14 @@ def load_remote_console(email, passwd, domain, app):
     global password
     username = email
     password = passwd
-    os.environ['AUTH_DOMAIN'] = domain
-    os.environ['USER_EMAIL'] = email
+    if email is None or len(email) == 0:
+        raise AttributeError, ('You need to supply the administrator '
+                               'e-mail address.')
     if app is None or len(app) == 0:
         raise AttributeError, ('You need to supply a valid app name'
                                ' (the same one from app.yaml)')
+    os.environ['AUTH_DOMAIN'] = domain
+    os.environ['USER_EMAIL'] = email
     # loading appengine modules
     setup_gae()
     from google.appengine.ext import db
@@ -48,9 +51,17 @@ def load_remote_console(email, passwd, domain, app):
     code.interact('AppEngine interactive console for %s' % app, None, locals())
 
 
+attempts = 0
 def auth_func():
+    global attempts
     global username
     global password
+    attempts += 1
+    if attempts == 2:
+        password = None
+    if attempts > 2:
+        username = None
+        password = None
     if username is None or len(username) == 0:
         username = raw_input('Username: ')
     if password is None or len(password) == 0:
