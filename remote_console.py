@@ -16,7 +16,7 @@ import models
 
 
 from getpass import getpass
-from optparse import OptionParser
+from optparse import OptionParser, OptionValueError
 
 
 username = ''
@@ -37,11 +37,11 @@ def load_remote_console(email, passwd, domain, app):
     username = email
     password = passwd
     if email is None or len(email) == 0:
-        raise AttributeError, ('You need to supply the administrator '
-                               'e-mail address.')
+        raise OptionValueError, ('You need to supply the administrator '
+                                 'e-mail address.')
     if app is None or len(app) == 0:
-        raise AttributeError, ('You need to supply a valid app name'
-                               ' (the same one from app.yaml)')
+        raise OptionValueError, ('You need to supply a valid app name'
+                                 ' (the same one from app.yaml)')
     os.environ['AUTH_DOMAIN'] = domain
     os.environ['USER_EMAIL'] = email
     # loading appengine modules
