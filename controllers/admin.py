@@ -131,6 +131,7 @@ class CreatePostHandler(webapp.RequestHandler):
                 page.render(self, 'templates/error/error.html',
                             template_values)
 
+            helpers.ping_services()
             self.redirect(new_post.get_absolute_url())
         else:
             template_values = {

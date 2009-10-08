@@ -2,15 +2,34 @@ import os
 import string
 import datetime
 import config
+import logging
+import xmlrpclib
 
 from google.appengine.ext.webapp import template
 from google.appengine.ext import db
 from google.appengine.api import memcache
 from google.appengine.api import users
 from dateutil.relativedelta import *
+from xmlrpc import GoogleXMLRPCTransport
 
 from models import blog
 
+
+def ping_services():
+    if config.SETTINGS.get('pingomatic') and not config.SETTINGS.get('debug'):
+        logging.debug('Trying to ping Ping-o-Matic')
+        rpc_server = xmlrpclib.ServerProxy('http://rpc.pingomatic.com',
+                                           GoogleXMLRPCTransport())
+        blog_name = config.SETTINGS['title']
+        blog_url = config.SETTINGS['url']
+        blog_feed = '%s/feed'
+        response = rpc_server.weblogUpdates.ping(blog_name, blog_url,
+                                                 blog_feed)
+        msg = response.get('message', '(No message on RPC result)')
+        if response.get('flerror'):
+            logging.error('Ping error from Ping-o-Matic: %s' % msg)
+        else:
+            logging.debug('Ping-o-Matic ping OK: %s' % msg)
 
 def get_post(year, month, day, slug):
     post = memcache.get('post-%s' % slug)
