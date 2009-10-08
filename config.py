@@ -25,6 +25,9 @@ SETTINGS = {
     # Enable/Disable using feedburner to publish feeds
     # Set to your Feedburner shortname, or False to disable
     'feedburner': False,
+    # Enable/Disable pinging ping-o-matic after publishing a post.
+    # Accepted values: True or False.
+    'pingomatic': False,
 }
 
 try:

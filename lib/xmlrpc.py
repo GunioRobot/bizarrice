@@ -33,13 +33,13 @@ class GoogleXMLRPCTransport(object):
         :Parameters:
             host : str
                 target host
-                
+
             handler : str
                 RPC handler on server (i.e., path to handler)
-                
+
             request_body : str
                 XML-RPC request body
-                
+
             verbose : bool/int
                 debugging flag. Ignored by this implementation
 
@@ -59,9 +59,9 @@ class GoogleXMLRPCTransport(object):
         except:
             msg = 'Failed to fetch %s' % url
             raise xmlrpclib.ProtocolError(host + handler, 500, msg, {})
-                                          
+
         if response.status_code != 200:
-            logging.error('%s returned status code %s' % 
+            logging.error('%s returned status code %s' %
                           (url, response.status_code))
             raise xmlrpclib.ProtocolError(host + handler,
                                           response.status_code,
@@ -69,7 +69,7 @@ class GoogleXMLRPCTransport(object):
                                           response.headers)
         else:
             result = self.__parse_response(response.content)
-        
+
         return result
 
     def __parse_response(self, response_body):
