@@ -119,9 +119,20 @@ class CreatePostHandler(webapp.RequestHandler):
         new_post.excerpt = excerpt
 
         new_post.tags = self.request.get('tags').split()
-
-        new_post.put()
+        
         if self.request.get('submit') == 'Submit':
+            
+            try:
+                new_post.put()
+            except blog.SlugConstraintViolation, e:
+                template_values = {
+                    'error_message': "".join(e.args),
+                }
+                page = view.Page()
+                page.render(self, 'templates/error/error.html',
+                            template_values)
+                return
+            
             self.redirect(new_post.get_absolute_url())
         else:
             template_values = {
