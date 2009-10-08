@@ -6,6 +6,7 @@ import code
 import os
 import re
 import sys
+import logging
 
 # useful local modules
 import import_wrapper
