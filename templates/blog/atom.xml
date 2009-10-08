@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <title><![CDATA[{{settings.title}}]]></title>
-    <subtitle type="text"><![CDATA[{{settings.description}}]]></subtitle>
+    <title><![CDATA[{{config.title}}]]></title>
+    <subtitle type="text"><![CDATA[{{config.description}}]]></subtitle>
     <updated>{{ updated|rfc3339 }}</updated>
-    <id>{{ settings.url }}/</id>
-    <link rel="alternate" href="{{ settings.url }}" title="{{ settings.title }}" type="text/html" />
-    <link rel="self" href="{{ settings.url }}/feed" title="{{ settings.title }} Atom Feed" type="application/atom+xml" />
+    <id>{{ config.url }}/</id>
+    <link rel="alternate" href="{{ config.url }}" title="{{ config.title }}" type="text/html" />
+    <link rel="self" href="{{ config.url }}/feed" title="{{ config.title }} Atom Feed" type="application/atom+xml" />
     <link rel="hub" href="http://pubsubhubbub.appspot.com" />
     <link rel="hub" href="http://hubbub.api.typepad.com/" />
     <author>
-        <name><![CDATA[{{settings.author}}]]></name>
-        <email>{{settings.email}}</email>
-        <uri>{{settings.url}}</uri>
+        <name><![CDATA[{{config.author}}]]></name>
+        <email>{{config.email}}</email>
+        <uri>{{config.url}}</uri>
     </author>
     <generator uri="http://github.com/caio/bizarrice" version="0.1">Bizarrice Blog for AppEngine</generator>
-    <rights type="html"><![CDATA[&amp;copy; 2009 {{settings.author}}]]></rights>
+    <rights type="html"><![CDATA[&amp;copy; 2009 {{config.author}}]]></rights>
     {% for post in posts %}
     <entry>
-        <id>{{ settings.url }}{{ post.get_absolute_url }}</id>
+        <id>{{ config.url }}{{ post.get_absolute_url }}</id>
         <title type="text"><![CDATA[{{post.title}}]]></title>
-        <link href="{{ settings.url }}{{ post.get_absolute_url }}" rel="alternate" type="text/html" />
+        <link href="{{ config.url }}{{ post.get_absolute_url }}" rel="alternate" type="text/html" />
         <updated>{{ post.updated|rfc3339 }}</updated>
         <published>{{ post.pub_date|rfc3339 }}</published>
         <content type="html"><![CDATA[{{ post.body_html }}]]></content>
         <author>
-            <name><![CDATA[{{settings.author}}]]></name>
-            <email>{{settings.email}}</email>
-            <uri>{{settings.url}}</uri>
+            <name><![CDATA[{{config.author}}]]></name>
+            <email>{{config.email}}</email>
+            <uri>{{config.url}}</uri>
         </author>
     </entry>
     {% endfor %}

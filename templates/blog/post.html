@@ -2,7 +2,7 @@
 
 {% block title %}{{ post.title }}{% endblock %}
 {% block head %}
-{% if settings.disqus and settings.debug %}
+{% if config.disqus and config.debug %}
 <script type="text/javascript">
     var disqus_developer=1;
 </script>
@@ -12,7 +12,7 @@
 {% block content %}
     <div class="post">
         <div class="datetime">
-            <a href="{{settings.url}}{{ post.get_absolute_url }}" title="{{ post.title }}">permalink</a><br />
+            <a href="{{config.url}}{{ post.get_absolute_url }}" title="{{ post.title }}">permalink</a><br />
             {% if user_is_admin %}<a href="{{ post.get_edit_url }}" title="Edit this post">Edit</a><br />{% endif %}
             {{ post.pub_date|date_diff }}<br />
             Tags:{% for tag in post.tags %} <a href="/tag/{{ tag }}">{{ tag }}</a>{% endfor %}<br />
@@ -27,10 +27,10 @@
             {% endifnotequal %}
         </p>
     </div>
-    {% if settings.disqus %}
+    {% if config.disqus %}
         <div id="disqus_thread">
-        <script type="text/javascript" src="http://disqus.com/forums/{{ settings.disqus }}/embed.js"></script>
-        <noscript><a href="http://{{ settings.disqus }}.disqus.com/?url=ref">View the discussion thread.</a></noscript>
+        <script type="text/javascript" src="http://disqus.com/forums/{{ config.disqus }}/embed.js"></script>
+        <noscript><a href="http://{{ config.disqus }}.disqus.com/?url=ref">View the discussion thread.</a></noscript>
         </div>
     {% endif %}
 {% endblock %}

@@ -54,7 +54,7 @@ class DeletePageHandler(webapp.RequestHandler):
         if p is not None:
             p.delete()
         memcache.flush_all()
-        self.redirect(config.SETTINGS['url'])
+        self.redirect(config.url)
 
 
 class EditPageHandler(webapp.RequestHandler):
@@ -148,7 +148,7 @@ class DeletePostHandler(webapp.RequestHandler):
         if p is not None:
             p.delete()
         memcache.flush_all()
-        self.redirect(config.SETTINGS['url'])
+        self.redirect(config.url)
 
 
 class EditPostHandler(webapp.RequestHandler):

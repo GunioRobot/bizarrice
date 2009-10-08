@@ -1,16 +1,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <title>{% block title %}{% endblock %} | {{ settings.title }}</title>
+    <title>{% block title %}{% endblock %} | {{ config.title }}</title>
     <link rel="stylesheet" href="/static/css/style.css" type="text/css" media="screen, projection">
-    <link href="/feed" type="application/atom+xml" rel="alternate" title="{{ settings.title }} Atom Feed" />
+    <link href="/feed" type="application/atom+xml" rel="alternate" title="{{ config.title }} Atom Feed" />
     {% block head %}{% endblock %}
 </head>
 <body>
     <div class="wrapper">
         <div class=header>
             {% block header%}
-            <h1><a href="/" class="logo">{{ settings.title }}</a></h1>
+            <h1><a href="/" class="logo">{{ config.title }}</a></h1>
             {% endblock %}
         </div>
         <div class="main">
@@ -18,24 +18,24 @@
         </div>
         <div id="bottomnav" class="post">
             <div class="navcenter">
-                <a href="/" title="{{ settings.title }}">Home</a> {% if user_is_admin %}| <a href="/admin" title="Administration Panel">Admin</a>{% endif %} {% block pages %}{% for page in page_list %}| {{ page }}{% endfor %}{% endblock %} {% block sidebar %}{% endblock %}
+                <a href="/" title="{{ config.title }}">Home</a> {% if user_is_admin %}| <a href="/admin" title="Administration Panel">Admin</a>{% endif %} {% block pages %}{% for page in page_list %}| {{ page }}{% endfor %}{% endblock %} {% block sidebar %}{% endblock %}
             </div>
         </div>
         <div id="footer" class="post">
             <div class="navcenter">
-                &copy; {{ settings.author }} 2009 | Original theme by <a href="http://langer.tumblr.com" title="Matt Langer's Tumblr">Langer</a> | Powered by <a href="http://code.google.com/appengine/" title="Google App Engine">AppEngine</a>
+                &copy; {{ config.author }} 2009 | Original theme by <a href="http://langer.tumblr.com" title="Matt Langer's Tumblr">Langer</a> | Powered by <a href="http://code.google.com/appengine/" title="Google App Engine">AppEngine</a>
             </div>
         </div>
     </div>
     {% block bodyend %}{% endblock %}
-    {% if settings.google_analytics %}
+    {% if config.google_analytics %}
     <script type="text/javascript">
         var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
         document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
     </script>
     <script type="text/javascript">
         try{
-            var pageTracker = _gat._getTracker("{{ settings.google_analytics }}");
+            var pageTracker = _gat._getTracker("{{ config.google_analytics }}");
             pageTracker._trackPageview();
         } catch(err) {}
     </script>

@@ -152,7 +152,7 @@ class DayHandler(webapp.RequestHandler):
 
 class FeedburnerHandler(webapp.RequestHandler):
     def get(self):
-        if not config.SETTINGS.get('feedburner'):
+        if not config.feedburner:
             self.redirect("/atom.xml", permanent=True)
         else:
             self.redirect("http://feeds.feedburner.com/caioromao",

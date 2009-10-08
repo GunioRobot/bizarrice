@@ -37,7 +37,7 @@ def main():
          # If we make it this far then the page we are looking
          # for does not exist
          ('/.*', error.Error404Handler),
-        ], debug=config.SETTINGS.get('debug', False))
+        ], debug=config.debug)
     wsgiref.handlers.CGIHandler().run(application)
 
 if __name__ == '__main__':

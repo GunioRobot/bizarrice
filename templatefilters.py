@@ -19,7 +19,7 @@ def rfc3339(date):
 def tz_date(date, fmt="%F %d %Y %H:%M"):
     tz = memcache.get('tz')
     if tz is None:
-        zone = config.SETTINGS['timezone']
+        zone = config.timezone
         if zone in pytz.all_timezones:
             tz = pytz.timezone(zone)
         elif not zone:

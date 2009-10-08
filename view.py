@@ -10,6 +10,7 @@ from dateutil.relativedelta import *
 
 import config
 import helpers
+
 from models import blog
 
 
@@ -25,9 +26,9 @@ class Page(object):
             'page_list': helpers.get_page_list(),
             'user': users.get_current_user(),
             'user_is_admin': users.is_current_user_admin(),
+            'config': config,
         }
 
-        values.update({'settings': config.SETTINGS})
         values.update(template_values)
 
         template_path = os.path.join(config.APP_ROOT_DIR, template_file)
@@ -36,7 +37,7 @@ class Page(object):
     def render_paginated_query(self, handler, query, values_name,
                                template_file, template_values={}):
         """Paginate a query and render the requested page"""
-        num = config.SETTINGS['items_per_page']
+        num = config.items_per_page
         offset = string.atoi(handler.request.get('offset') or str(0))
 
         items = query.fetch(num + 1, offset)

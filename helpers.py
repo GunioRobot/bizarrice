@@ -16,12 +16,12 @@ from models import blog
 
 
 def ping_services():
-    if config.SETTINGS.get('pingomatic') and not config.SETTINGS.get('debug'):
+    if config.pingomatic and not config.debug:
         logging.debug('Trying to ping Ping-o-Matic')
         rpc_server = xmlrpclib.ServerProxy('http://rpc.pingomatic.com',
                                            GoogleXMLRPCTransport())
-        blog_name = config.SETTINGS['title']
-        blog_url = config.SETTINGS['url']
+        blog_name = config.title
+        blog_url = config.url
         blog_feed = '%s/feed'
         response = rpc_server.weblogUpdates.ping(blog_name, blog_url,
                                                  blog_feed)
