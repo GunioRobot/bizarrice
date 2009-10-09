@@ -1,3 +1,4 @@
 *.pyc
 index.yaml
 local_config.py
+backup/*
