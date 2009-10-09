@@ -31,7 +31,7 @@ def setup_gae():
             sys.path.append('%s/lib/yaml/lib/' % path)
             break
 
-def load_remote_console(email, passwd, domain, app):
+def setup(email, passwd, domain, app):
     global username
     global password
     username = email
@@ -49,7 +49,6 @@ def load_remote_console(email, passwd, domain, app):
     from google.appengine.ext import db
     from google.appengine.ext.remote_api import remote_api_stub
     remote_api_stub.ConfigureRemoteDatastore(app, '/remote_api', auth_func)
-    code.interact('AppEngine interactive console for %s' % app, None, locals())
 
 
 attempts = 0
@@ -80,6 +79,7 @@ def read_options():
 
 if __name__ == '__main__':
     options = read_options()
-    load_remote_console(**options)
+    setup(**options)
+    code.interact('AppEngine interactive console for %s' % options['app'], None, locals())
 
 
