@@ -4,9 +4,18 @@ import config
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
+from google.appengine.ext.webapp import template
+from google.appengine.ext.db import djangoforms
 
 from models import blog
 
+class PostForm(djangoforms.ModelForm):
+    class Meta:
+        model = blog.Post
+        #_class is a property of polymodel used to track its
+        #instances
+        exclude = ['body_html','excerpt_html','_class','author']
+        
 
 class AdminHandler(webapp.RequestHandler):
     def get(self):
@@ -101,13 +110,17 @@ class EditPageHandler(webapp.RequestHandler):
 class CreatePostHandler(webapp.RequestHandler):
     def get(self):
         page = view.Page()
-        page.render(self, 'templates/admin/post_form.html')
-
+        template_values = {
+            'postform': PostForm()
+            }
+        page.render(self, 'templates/admin/post_form.html', 
+                    template_values)
+    
     def post(self):
         new_post = blog.Post()
         new_post.title = self.request.get('title')
         new_post.body = self.request.get('body')
-
+        
         slug = self.request.get('slug').strip()
         if slug == '':
             slug = blog.slugify(new_post.title)
@@ -136,6 +149,7 @@ class CreatePostHandler(webapp.RequestHandler):
             self.redirect(new_post.get_absolute_url())
         else:
             template_values = {
+                'postform': PostForm(instance=new_post),
                 'post': new_post,
             }
             page = view.Page()
