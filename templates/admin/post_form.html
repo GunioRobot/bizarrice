@@ -6,41 +6,32 @@
     
     <div class="title">
         {{ postform.title.errors }}
-        <label for="title">Title</label>
-        <p>
+        <label for="title">Title</label><br />
         {{ postform.title }}
-        </p>
     </div>
 
     <div class="slug">
         {{ postform.slug.errors }}
-        <label for="slug">Slug (leave blank to auto-generate)</label>
-        <p>
+        <label for="slug">Slug (leave blank to auto-generate)</label><br />
         {{ postform.slug }}
-        </p>
     </div>
 
     <div class="tags">
         {{ postform.tags.errors }}
-        <label for="tags">Tags (separate tags with spaces)</label>
-        <p>
+        <label for="tags">Tags (separate tags with spaces)</label><br />
         {{ postform.tags }}
-        </p>
     </div>
 
     <div class="excerpt">
         {{ postform.excerpt.errors }}
-        <label for="excerpt">Excerpt (leave blank for no excerpt)</label>
-        <p>
+        <label for="excerpt">Excerpt (leave blank for no excerpt)</label><br />
         {{ postform.excerpt }}
-        </p>
     </div>
 
     <div class="body">
         {{ postform.body.errors }}
-        <label for="body">Body</label><p>
+        <label for="body">Body</label><br />
         <textarea name="body" id="body" rows="5" cols="25">{% if post %}{% if post.body %}{{ post.body }}{% endif %}{% endif %}</textarea>
-        </p>
     </div>
     
     <input type="submit" name="submit" value="Submit">
