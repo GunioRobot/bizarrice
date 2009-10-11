@@ -124,6 +124,8 @@ class CreatePostHandler(webapp.RequestHandler):
         slug = self.request.get('slug').strip()
         if slug == '':
             slug = blog.slugify(new_post.title)
+        else:
+            slug = blog.slugify(slug)
         new_post.slug = slug
 
         excerpt = self.request.get('excerpt').strip()
@@ -195,6 +197,8 @@ class EditPostHandler(webapp.RequestHandler):
             slug = self.request.get('slug').strip()
             if slug == '':
                 slug = blog.slugify(post.title)
+            else:
+                slug = blog.slugify(slug)
             post.slug = slug
 
             excerpt = self.request.get('excerpt').strip()
@@ -205,7 +209,17 @@ class EditPostHandler(webapp.RequestHandler):
             post.tags = self.request.get('tags').split()
             
             if self.request.get('submit') == 'Submit':
-                post.put()
+            try:
+                new_post.put()
+            except blog.SlugConstraintViolation, e:
+                template_values = {
+                    'error_message': "".join(e.args),
+                    }
+                page = view.Page()
+                page.render(self, 'templates/error/error.html',
+                            template_values)
+                return
+            
                 self.redirect(post.get_absolute_url())
             else:
                 template_values = {
