@@ -12,7 +12,7 @@ from controllers import blog, admin, error
 
 def main():
     # Load custom template filters:
-    webapp.template.register_template_library('templatefilters')
+    webapp.template.register_template_library('filters')
     application = webapp.WSGIApplication(
         [('/', blog.IndexHandler),
          ('/feed', blog.FeedburnerHandler),
