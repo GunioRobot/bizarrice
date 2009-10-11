@@ -4,9 +4,18 @@ import config
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
+from google.appengine.ext.webapp import template
+from google.appengine.ext.db import djangoforms
 
 from models import blog
 
+class PostForm(djangoforms.ModelForm):
+    class Meta:
+        model = blog.Post
+        #_class is a property of polymodel used to track its
+        #instances
+        exclude = ['body_html','excerpt_html','_class','author']
+        
 
 class AdminHandler(webapp.RequestHandler):
     def get(self):
@@ -101,16 +110,22 @@ class EditPageHandler(webapp.RequestHandler):
 class CreatePostHandler(webapp.RequestHandler):
     def get(self):
         page = view.Page()
-        page.render(self, 'templates/admin/post_form.html')
-
+        template_values = {
+            'postform': PostForm()
+            }
+        page.render(self, 'templates/admin/post_form.html', 
+                    template_values)
+    
     def post(self):
         new_post = blog.Post()
         new_post.title = self.request.get('title')
         new_post.body = self.request.get('body')
-
+        
         slug = self.request.get('slug').strip()
         if slug == '':
             slug = blog.slugify(new_post.title)
+        else:
+            slug = blog.slugify(slug)
         new_post.slug = slug
 
         excerpt = self.request.get('excerpt').strip()
@@ -119,7 +134,9 @@ class CreatePostHandler(webapp.RequestHandler):
         new_post.excerpt = excerpt
 
         new_post.tags = self.request.get('tags').split()
-
+        
+        new_post.update_markdown_fields()
+        
         if self.request.get('submit') == 'Submit':
             try:
                 new_post.put()
@@ -136,6 +153,7 @@ class CreatePostHandler(webapp.RequestHandler):
             self.redirect(new_post.get_absolute_url())
         else:
             template_values = {
+                'postform': PostForm(instance=new_post),
                 'post': new_post,
             }
             page = view.Page()
@@ -161,6 +179,7 @@ class EditPostHandler(webapp.RequestHandler):
         else:
             template_values = {
                 'action': post.get_edit_url(),
+                'postform': PostForm(instance=post),
                 'post': post,
             }
             page.render(self, 'templates/admin/post_form.html',
@@ -178,6 +197,8 @@ class EditPostHandler(webapp.RequestHandler):
             slug = self.request.get('slug').strip()
             if slug == '':
                 slug = blog.slugify(post.title)
+            else:
+                slug = blog.slugify(slug)
             post.slug = slug
 
             excerpt = self.request.get('excerpt').strip()
@@ -187,12 +208,23 @@ class EditPostHandler(webapp.RequestHandler):
 
             post.tags = self.request.get('tags').split()
 
-            post.put()
             if self.request.get('submit') == 'Submit':
+                try:
+                    post.put()
+                except blog.SlugConstraintViolation, e:
+                    template_values = {
+                        'error_message': "".join(e.args),
+                        }
+                    page = view.Page()
+                    page.render(self, 'templates/error/error.html',
+                                template_values)
+                    return
+
                 self.redirect(post.get_absolute_url())
             else:
                 template_values = {
                     'action': post.get_edit_url(),
+                    'postform': PostForm(instance=post),
                     'post': post,
                 }
                 page = view.Page()
