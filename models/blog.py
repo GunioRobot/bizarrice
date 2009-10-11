@@ -19,7 +19,7 @@ def slugify(value):
     return re.sub('[-\s]+', '-', value)
 
 class Publishable(polymodel.PolyModel):
-    title = db.StringProperty()
+    title = db.StringProperty(required=True)
     slug = db.StringProperty()
     pub_date = db.DateTimeProperty(auto_now_add=True)
     updated = db.DateTimeProperty(auto_now=True)
@@ -104,7 +104,7 @@ class Post(Publishable):
     )
 
     excerpt = db.TextProperty(default=None)
-    body = db.TextProperty()
+    body = db.TextProperty(required=True)
     excerpt_html = db.TextProperty(default=None)
     body_html = db.TextProperty()
     tags = db.StringListProperty()
@@ -125,6 +125,13 @@ class Post(Publishable):
         # Delete the cached tag list whenever a post is created/updated
         memcache.delete('tag_list')
         memcache.delete('atom')
+
+        # Split tags and ensure none is repeated.
+        # The splitting is needed because we change the field
+        # type for tags on controllers.admin.PostForm
+        tags = ' '.join(self.tags).split()
+        tags = list(set(tags))
+        self.tags = tags
 
         self.test_slug_collision(True)
         memcache.delete('post-%s' % self.slug)

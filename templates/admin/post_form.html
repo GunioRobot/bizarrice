@@ -2,40 +2,14 @@
 
 {% block content %}
 
-<form method="post" action="{% if action %}{{ action }}{% else %}/admin/post/new{% endif %}">
-    
-    <div class="title">
-        {{ postform.title.errors }}
-        <label for="title">Title</label><br />
-        {{ postform.title }}
-    </div>
-
-    <div class="slug">
-        {{ postform.slug.errors }}
-        <label for="slug">Slug (leave blank to auto-generate)</label><br />
-        {{ postform.slug }}
-    </div>
-
-    <div class="tags">
-        {{ postform.tags.errors }}
-        <label for="tags">Tags (separate tags with spaces)</label><br />
-        {{ postform.tags }}
-    </div>
-
-    <div class="excerpt">
-        {{ postform.excerpt.errors }}
-        <label for="excerpt">Excerpt (leave blank for no excerpt)</label><br />
-        {{ postform.excerpt }}
-    </div>
-
-    <div class="body">
-        {{ postform.body.errors }}
-        <label for="body">Body</label><br />
-        <textarea name="body" id="body" rows="5" cols="25">{% if post %}{% if post.body %}{{ post.body }}{% endif %}{% endif %}</textarea>
-    </div>
-    
-    <input type="submit" name="submit" value="Submit">
-    <input type="submit" name="submit" value="Preview">
+<form method="post" action="">
+    <table>
+        {{ form }}
+    <tr>
+        <td><input type="submit" name="submit" value="Submit" /></td>
+        <td><input type="submit" name="submit" value="Preview" /></td>
+    </tr>
+    </table>
 </form>
 
     {% if post %}
