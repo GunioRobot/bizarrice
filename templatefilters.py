@@ -1,15 +1,18 @@
 import datetime
-import pytz
 import config
 import logging
 
+from dateutil import parser
 from google.appengine.api import memcache
+from google.appengine.api import urlfetch
 from google.appengine.ext.webapp import template
 from django.template import defaultfilters
 from django.utils.translation import ngettext
+from django.utils.simplejson import decoder
 
 
 register = template.create_template_register()
+JSONTIME = 'http://json-time.appspot.com/time.json'
 
 @register.filter
 def rfc3339(date):
@@ -20,16 +23,29 @@ def tz_date(date, fmt="%F %d %Y %H:%M"):
     tz = memcache.get('tz')
     if tz is None:
         zone = config.timezone
-        if zone in pytz.all_timezones:
-            tz = pytz.timezone(zone)
-        elif not zone:
-            tz = pytz.UTC
+        result = urlfetch.fetch('%s?tz=%s' % (JSONTIME, zone))
+        if result.status_code != 200:
+            logging.error('Service %s returned unexpected status code: %d'
+                          % (JSONTIME, result.status_code))
+            tz = utc
         else:
-            logging.error('Invalid timezone "%s" in config.py. Falling '
-                          'back to UTC.' % zone)
-            tz = pytz.UTC
+            try:
+                json = decoder.JSONDecoder().decode(result.content)
+            except ValueError:
+                logging.error('Service %s returned non-json content'
+                              % JSONTIME)
+                tz = utc
+            else:
+                if json['error']:
+                    logging.error('Invalid timezone "%s" in config.py. '
+                                  'Falling back to UTC.' % zone)
+                    tz = utc
+                else:
+                    logging.info(json['datetime'])
+                    date = parser.parse(json['datetime'])
+                    tz = date.tzinfo
         memcache.set('tz', tz)
-    return date.replace(tzinfo=pytz.UTC).astimezone(tz).strftime(fmt)
+    return date.replace(tzinfo=utc).astimezone(tz).strftime(fmt)
 
 @register.filter
 def date_diff(d):
@@ -70,3 +86,15 @@ def date_diff(d):
 
     return ('%(number)d %(type)s ago') % \
             {'number': count, 'type': name(count)}
+
+
+class UTC(datetime.tzinfo):
+    def utcoffset(self, dt):
+        return datetime.timedelta(0)
+
+    def tzname(self, dt):
+        return 'UTF'
+
+    def dst(self, dt):
+        return datetime.timedelta(0)
+utc = UTC()
