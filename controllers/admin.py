@@ -132,7 +132,9 @@ class CreatePostHandler(webapp.RequestHandler):
         new_post.excerpt = excerpt
 
         new_post.tags = self.request.get('tags').split()
-
+        
+        new_post.update_markdown_fields()
+        
         if self.request.get('submit') == 'Submit':
             try:
                 new_post.put()
