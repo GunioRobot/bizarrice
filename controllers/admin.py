@@ -177,6 +177,7 @@ class EditPostHandler(webapp.RequestHandler):
         else:
             template_values = {
                 'action': post.get_edit_url(),
+                'postform': PostForm(instance=post),
                 'post': post,
             }
             page.render(self, 'templates/admin/post_form.html',
@@ -202,13 +203,14 @@ class EditPostHandler(webapp.RequestHandler):
             post.excerpt = excerpt
 
             post.tags = self.request.get('tags').split()
-
-            post.put()
+            
             if self.request.get('submit') == 'Submit':
+                post.put()
                 self.redirect(post.get_absolute_url())
             else:
                 template_values = {
                     'action': post.get_edit_url(),
+                    'postform': PostForm(instance=post),
                     'post': post,
                 }
                 page = view.Page()
