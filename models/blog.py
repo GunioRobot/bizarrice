@@ -40,8 +40,13 @@ class Publishable(polymodel.PolyModel):
                 setattr(self, value, data)
 
     def test_slug_collision(self, limit_by_day=False):
+        # Auto-filling slug field, if needed.
+        if self.slug is None or len(self.slug.strip()) == 0:
+            self.slug = self.title
+        self.slug = slugify(self.slug)
+
         # Create a query to check for slug uniqueness
-        query = Post.all(keys_only=True)
+        query = self.all(keys_only=True)
         start_date = None
         if limit_by_day:
             # Build the time span to check for slug uniqueness
@@ -71,7 +76,7 @@ class Page(Publishable):
         ('body', 'body_html'),
     )
 
-    body = db.TextProperty()
+    body = db.TextProperty(required=True)
     body_html = db.TextProperty()
     # The order in which it'll be listed
     index = db.IntegerProperty()
@@ -80,7 +85,10 @@ class Page(Publishable):
         return "/%s" % self.slug
 
     def get_edit_url(self):
-        return "/admin/page/edit%s" % self.get_absolute_url()
+        if not self.is_saved():
+            return '/admin/page/new'
+        else:
+            return "/admin/page/edit%s" % self.get_absolute_url()
 
     def put(self):
         memcache.delete('page_list')

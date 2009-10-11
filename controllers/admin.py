@@ -1,6 +1,7 @@
 import view
 import helpers
 import config
+import logging
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
@@ -9,13 +10,6 @@ from google.appengine.ext.db import djangoforms
 
 from models import blog
 
-class PostForm(djangoforms.ModelForm):
-    class Meta:
-        model = blog.Post
-        #_class is a property of polymodel used to track its
-        #instances
-        exclude = ['body_html','excerpt_html','_class','author']
-        
 
 class AdminHandler(webapp.RequestHandler):
     def get(self):
@@ -26,35 +20,53 @@ class AdminHandler(webapp.RequestHandler):
         page = view.Page()
         page.render(self, 'templates/admin/index.html', template_values)
 
+#{{{ Page Handlers
+def with_page(funct):
+    """Credits: http://blog.notdot.net/"""
+    def decorate(self, page_slug=None):
+        page = None
+        if page_slug is not None:
+            page = helpers.get_page(page_slug)
+            if page is None:
+                view.Page().render_error(self, 404)
+                return
+        funct(self, page)
+    return decorate
 
-class CreatePageHandler(webapp.RequestHandler):
-    def get(self):
-        page = view.Page()
-        page.render(self, 'templates/admin/page_form.html')
+class PageForm(djangoforms.ModelForm):
+    class Meta():
+        model = blog.Page
+        exclude = ['body_html', '_class', 'author', 'pub_date', 'updated']
 
-    def post(self):
-        new_page = blog.Page()
-        new_page.title = self.request.get('title')
-        new_page.body = self.request.get('body')
-        slug = self.request.get('slug').strip()
-        if slug == '':
-            slug = blog.slugify(new_page.title)
-        new_page.slug = slug
-        index = self.request.get('index').strip()
-        if index == '':
-            index = 0
-        new_page.index = int(index)
 
-        new_page.put()
-        if self.request.get('submit') == 'Submit':
-            self.redirect(new_page.get_absolute_url())
-        else:
-            template_values = {
-                'page': new_page,
-                }
-            page = view.Page()
-            page.render(self, 'templates/admin/page_form.html',
+class PageHandler(webapp.RequestHandler):
+    def render_form(self, page=None, form=None):
+        template_values = {
+            'page': page,
+            'form': form,
+        }
+        renderer = view.Page()
+        renderer.render(self, 'templates/admin/page_form.html',
                         template_values)
+
+    @with_page
+    def get(self, page):
+        self.render_form(page, PageForm(instance=page))
+
+    @with_page
+    def post(self, page):
+        form = PageForm(data=self.request.POST, instance=page)
+        if form.is_valid():
+            page = form.save(commit=False)
+            try:
+                page.put()
+            except blog.SlugConstraintViolation:
+                logging.error('Slug "%s" is not unique' % page.slug)
+                self.render_form(page, form)
+            else:
+                self.redirect(page.get_absolute_url())
+        else:
+            self.render_form(page, form)
 
 
 class DeletePageHandler(webapp.RequestHandler):
@@ -64,47 +76,16 @@ class DeletePageHandler(webapp.RequestHandler):
             p.delete()
         memcache.flush_all()
         self.redirect(config.url)
+#}}}
 
-
-class EditPageHandler(webapp.RequestHandler):
-    def get(self, slug):
-        p = helpers.get_page(slug)
-        page = view.Page()
-        if p is None:
-            page.render_error(self, 404)
-        else:
-            template_values = {
-                'action': p.get_edit_url(),
-                'page': p,
-            }
-            page.render(self, 'templates/admin/page_form.html',
-                        template_values)
-
-    def post(self, slug):
-        p = helpers.get_page(slug)
-        page = view.Page()
-        if p == None:
-            page.render_error(self, 404)
-        else:
-            p.title = self.request.get('title')
-            p.body = self.request.get('body')
-            slug = self.request.get('slug').strip()
-            if slug == '':
-                slug = blog.slugify(p.title)
-            p.slug = slug
-            p.index = int(self.request.get('index', 0))
-
-            p.put()
-            if self.request.get('submit') == 'Submit':
-                self.redirect(p.get_absolute_url())
-            else:
-                template_values = {
-                    'action': p.get_edit_url(),
-                    'page': p,
-                }
-                page = view.Page()
-                page.render(self, 'templates/admin/page_form.html',
-                            template_values)
+#{{{ Post Handlers
+class PostForm(djangoforms.ModelForm):
+    class Meta():
+        model = blog.Post
+        #_class is a property of polymodel used to track its
+        #instances
+        exclude = ['body_html', 'excerpt_html', '_class', 'author',
+                   'pub_date', 'updated']
 
 
 class CreatePostHandler(webapp.RequestHandler):
@@ -113,14 +94,14 @@ class CreatePostHandler(webapp.RequestHandler):
         template_values = {
             'postform': PostForm()
             }
-        page.render(self, 'templates/admin/post_form.html', 
+        page.render(self, 'templates/admin/post_form.html',
                     template_values)
-    
+
     def post(self):
         new_post = blog.Post()
         new_post.title = self.request.get('title')
         new_post.body = self.request.get('body')
-        
+
         slug = self.request.get('slug').strip()
         if slug == '':
             slug = blog.slugify(new_post.title)
@@ -134,9 +115,9 @@ class CreatePostHandler(webapp.RequestHandler):
         new_post.excerpt = excerpt
 
         new_post.tags = self.request.get('tags').split()
-        
+
         new_post.update_markdown_fields()
-        
+
         if self.request.get('submit') == 'Submit':
             try:
                 new_post.put()
@@ -230,7 +211,7 @@ class EditPostHandler(webapp.RequestHandler):
                 page = view.Page()
                 page.render(self, 'templates/admin/post_form.html',
                             template_values)
-
+#}}}
 
 class ClearCacheHandler(webapp.RequestHandler):
     def get(self):
