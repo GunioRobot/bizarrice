@@ -9,6 +9,7 @@ description = 'Description'
 author = 'Author'
 email = 'Email'
 url = 'BlogURL'
+keywords = 'some, keywords, for your, blog'
 items_per_page = 10
 # The Blog theme. It should be the name of the directory under 'themes/'
 # if set to False or an invalid theme, it will fall back to default.
