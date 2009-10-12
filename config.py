@@ -10,6 +10,9 @@ author = 'Author'
 email = 'Email'
 url = 'BlogURL'
 items_per_page = 10
+# The Blog theme. It should be the name of the directory under 'themes/'
+# if set to False or an invalid theme, it will fall back to default.
+theme = 'langer'
 # Enable/disable Google Analytics
 # Set to your tracking code (UA-xxxxxx-x), or False to disable
 google_analytics = False

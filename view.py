@@ -1,18 +1,33 @@
 import os
 import string
 import datetime
+import logging
 
 from google.appengine.ext.webapp import template
 from google.appengine.ext import db
 from google.appengine.api import memcache
 from google.appengine.api import users
 from dateutil.relativedelta import *
+from django.template import TemplateDoesNotExist
 
 import config
 import helpers
 
 
 class Renderer(object):
+    def theme_template(self, path, values):
+        theme = config.theme or 'default'
+        base_path = os.path.join(config.APP_ROOT_DIR, 'themes')
+        template_path = os.path.join(base_path, theme, path)
+        try:
+            templ = template.render(template_path, values)
+        except TemplateDoesNotExist:
+            logging.error('Template "%s" for theme "%s" does not exist.'
+                          % (path, theme))
+            template_path = os.path.join(base_path, 'default', path)
+            templ = template.render(template_path, values)
+        return templ
+
     def render(self, handler, template_file, template_values={}):
         """Render a template"""
         #archive_list = get_archive_list()
@@ -28,9 +43,8 @@ class Renderer(object):
         }
 
         values.update(template_values)
-
-        template_path = os.path.join(config.APP_ROOT_DIR, template_file)
-        handler.response.out.write(template.render(template_path, values))
+        handler.response.out.write(self.theme_template(template_file,
+                                                       values))
 
     def render_paginated_query(self, handler, query, values_name,
                                template_file, template_values={}):
@@ -62,4 +76,4 @@ class Renderer(object):
         # Set the error code on the handler
         handler.error(error)
 
-        self.render(handler, 'templates/error/%d.html' % error, {})
+        self.render(handler, 'error/%d.html' % error, {})

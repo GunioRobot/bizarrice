@@ -19,7 +19,7 @@ class IndexHandler(webapp.RequestHandler):
         }
         renderer = view.Renderer()
         renderer.render_paginated_query(self, query, 'posts',
-                                        'templates/blog/index.html',
+                                        'blog/index.html',
                                         template_values)
 
 
@@ -33,7 +33,7 @@ class PageHandler(webapp.RequestHandler):
             template_values = {
                 'page': p,
             }
-            renderer.render(self, 'templates/blog/page.html',
+            renderer.render(self, 'blog/page.html',
                             template_values)
 
 
@@ -48,7 +48,7 @@ class PostHandler(webapp.RequestHandler):
                 'post': post,
             }
             renderer = view.Renderer()
-            renderer.render(self, 'templates/blog/post.html',
+            renderer.render(self, 'blog/post.html',
                             template_values)
 
 
@@ -65,7 +65,7 @@ class TagHandler(webapp.RequestHandler):
 
         renderer = view.Renderer()
         renderer.render_paginated_query(self, query, 'posts',
-                                        'templates/blog/index.html',
+                                        'blog/index.html',
                                         template_values)
 
 
@@ -90,7 +90,7 @@ class YearHandler(webapp.RequestHandler):
 
         renderer = view.Renderer()
         renderer.render_paginated_query(self, query, 'posts',
-                                        'templates/blog/index.html',
+                                        'blog/index.html',
                                         template_values)
 
 
@@ -119,7 +119,7 @@ class MonthHandler(webapp.RequestHandler):
 
         renderer = view.Renderer()
         renderer.render_paginated_query(self, query, 'posts',
-                                        'templates/blog/index.html',
+                                        'blog/index.html',
                                         template_values)
 
 
@@ -148,7 +148,7 @@ class DayHandler(webapp.RequestHandler):
 
         renderer = view.Renderer()
         renderer.render_paginated_query(self, query, 'posts',
-                                        'templates/blog/index.html',
+                                        'blog/index.html',
                                         template_values)
 
 
@@ -174,5 +174,5 @@ class AtomHandler(webapp.RequestHandler):
             memcache.set('atom', template_values)
         renderer = view.Renderer()
         self.response.headers["Content-Type"] = "application/atom+xml"
-        renderer.render(self, 'templates/blog/atom.xml', template_values)
+        renderer.render(self, 'blog/atom.xml', template_values)
 

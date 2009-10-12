@@ -17,7 +17,7 @@ class AdminHandler(webapp.RequestHandler):
             'pages': blog.Page.all().order('index'),
         }
         renderer = view.Renderer()
-        renderer.render(self, 'templates/admin/index.html',
+        renderer.render(self, 'admin/index.html',
                         template_values)
 
 
@@ -47,7 +47,7 @@ class PageHandler(webapp.RequestHandler):
             'form': form,
         }
         renderer = view.Renderer()
-        renderer.render(self, 'templates/admin/page_form.html',
+        renderer.render(self, 'admin/page_form.html',
                         template_values)
 
     @with_page
@@ -102,7 +102,7 @@ class PostHandler(webapp.RequestHandler):
             'form': form,
         }
         renderer = view.Renderer()
-        renderer.render(self, 'templates/admin/post_form.html',
+        renderer.render(self, 'admin/post_form.html',
                         template_values)
 
     @with_post
