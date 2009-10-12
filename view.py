@@ -12,7 +12,7 @@ import config
 import helpers
 
 
-class Page(object):
+class Renderer(object):
     def render(self, handler, template_file, template_values={}):
         """Render a template"""
         #archive_list = get_archive_list()

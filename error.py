@@ -6,5 +6,5 @@ import view
 class Error404Handler(webapp.RequestHandler):
 
     def get(self):
-        page = view.Page()
-        page.render_error(self, 404)
+        renderer = view.Renderer()
+        renderer.render_error(self, 404)

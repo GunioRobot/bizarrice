@@ -17,37 +17,39 @@ class IndexHandler(webapp.RequestHandler):
         template_values = {
             'page_title': 'Home',
         }
-        page = view.Page()
-        page.render_paginated_query(self, query, 'posts',
-                                    'templates/blog/index.html',
-                                    template_values)
+        renderer = view.Renderer()
+        renderer.render_paginated_query(self, query, 'posts',
+                                        'templates/blog/index.html',
+                                        template_values)
 
 
 class PageHandler(webapp.RequestHandler):
     def get(self, slug):
         p = helpers.get_page(slug)
-        page = view.Page()
+        renderer = view.Renderer()
         if p is None:
-            page.render_error(self, 404)
+            renderer.render_error(self, 404)
         else:
             template_values = {
                 'page': p,
             }
-            page.render(self, 'templates/blog/page.html', template_values)
+            renderer.render(self, 'templates/blog/page.html',
+                            template_values)
 
 
 class PostHandler(webapp.RequestHandler):
     def get(self, year, month, day, slug):
         post = helpers.get_post(year, month, day, slug)
         if post is None:
-            page = view.Page()
-            page.render_error(self, 404)
+            renderer = view.Renderer()
+            renderer.render_error(self, 404)
         else:
             template_values = {
                 'post': post,
             }
-            page = view.Page()
-            page.render(self, 'templates/blog/post.html', template_values)
+            renderer = view.Renderer()
+            renderer.render(self, 'templates/blog/post.html',
+                            template_values)
 
 
 class TagHandler(webapp.RequestHandler):
@@ -61,10 +63,10 @@ class TagHandler(webapp.RequestHandler):
             'page_description': 'Posts tagged "%s"' % (tag),
         }
 
-        page = view.Page()
-        page.render_paginated_query(self, query, 'posts',
-                                    'templates/blog/index.html',
-                                    template_values)
+        renderer = view.Renderer()
+        renderer.render_paginated_query(self, query, 'posts',
+                                        'templates/blog/index.html',
+                                        template_values)
 
 
 class YearHandler(webapp.RequestHandler):
@@ -86,10 +88,10 @@ class YearHandler(webapp.RequestHandler):
             'page_description': 'Yearly Post Archive: %d' % (year),
         }
 
-        page = view.Page()
-        page.render_paginated_query(self, query, 'posts',
-                                    'templates/blog/index.html',
-                                    template_values)
+        renderer = view.Renderer()
+        renderer.render_paginated_query(self, query, 'posts',
+                                        'templates/blog/index.html',
+                                        template_values)
 
 
 class MonthHandler(webapp.RequestHandler):
@@ -115,10 +117,10 @@ class MonthHandler(webapp.RequestHandler):
             'page_description': 'Monthly Post Archive: %s' % (month_text),
         }
 
-        page = view.Page()
-        page.render_paginated_query(self, query, 'posts',
-                                    'templates/blog/index.html',
-                                    template_values)
+        renderer = view.Renderer()
+        renderer.render_paginated_query(self, query, 'posts',
+                                        'templates/blog/index.html',
+                                        template_values)
 
 
 class DayHandler(webapp.RequestHandler):
@@ -144,10 +146,10 @@ class DayHandler(webapp.RequestHandler):
             'page_description': 'Daily Post Archive: %s' % (day_text),
         }
 
-        page = view.Page()
-        page.render_paginated_query(self, query, 'posts',
-                                    'templates/blog/index.html',
-                                    template_values)
+        renderer = view.Renderer()
+        renderer.render_paginated_query(self, query, 'posts',
+                                        'templates/blog/index.html',
+                                        template_values)
 
 
 class FeedburnerHandler(webapp.RequestHandler):
@@ -170,7 +172,7 @@ class AtomHandler(webapp.RequestHandler):
                 'updated': posts[0].updated,
             }
             memcache.set('atom', template_values)
-        page = view.Page()
+        renderer = view.Renderer()
         self.response.headers["Content-Type"] = "application/atom+xml"
-        page.render(self, 'templates/blog/atom.xml', template_values)
+        renderer.render(self, 'templates/blog/atom.xml', template_values)
 

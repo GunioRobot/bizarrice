@@ -16,8 +16,9 @@ class AdminHandler(webapp.RequestHandler):
             'posts': blog.Post.all().order('-pub_date'),
             'pages': blog.Page.all().order('index'),
         }
-        page = view.Page()
-        page.render(self, 'templates/admin/index.html', template_values)
+        renderer = view.Renderer()
+        renderer.render(self, 'templates/admin/index.html',
+                        template_values)
 
 
 class ClearCacheHandler(webapp.RequestHandler):
@@ -34,7 +35,7 @@ def with_page(funct):
         if page_slug is not None:
             page = helpers.get_page(page_slug)
             if page is None:
-                view.Page().render_error(self, 404)
+                view.Renderer().render_error(self, 404)
                 return
         funct(self, page)
     return decorate
@@ -45,7 +46,7 @@ class PageHandler(webapp.RequestHandler):
             'page': page,
             'form': form,
         }
-        renderer = view.Page()
+        renderer = view.Renderer()
         renderer.render(self, 'templates/admin/page_form.html',
                         template_values)
 
@@ -89,7 +90,7 @@ def with_post(funct):
         if slug is not None:
             post = helpers.get_post(year, month, day, slug)
             if post is None:
-                view.Page().render_error(self, 404)
+                view.Renderer().render_error(self, 404)
                 return
         funct(self, post)
     return decorate
@@ -100,7 +101,7 @@ class PostHandler(webapp.RequestHandler):
             'post': post,
             'form': form,
         }
-        renderer = view.Page()
+        renderer = view.Renderer()
         renderer.render(self, 'templates/admin/post_form.html',
                         template_values)
 
