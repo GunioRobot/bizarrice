@@ -23,7 +23,7 @@ class AdminHandler(webapp.RequestHandler):
 class ClearCacheHandler(webapp.RequestHandler):
     def get(self):
         memcache.flush_all()
-        self.redirect('/admin')
+        self.redirect('/admin/')
 
 
 #{{{ Page Handlers
