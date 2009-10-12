@@ -21,7 +21,7 @@ def save_backup(item, directory, has_tags=False):
     fd.write(item.body.encode('utf-8'))
 
 def backup_posts(count=False, offset=0):
-    from models.blog import Post
+    from blog.models import Post
 
     if not count:
         count = 1000
@@ -40,7 +40,7 @@ def backup_posts(count=False, offset=0):
         save_backup(post, 'posts', has_tags=True)
 
 def backup_pages(count=False, offset=0):
-    from models.blog import Page
+    from blog.models import Page
 
     if not count:
         count = 1000

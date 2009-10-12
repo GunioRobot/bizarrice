@@ -18,7 +18,7 @@
         </div>
         <div id="bottomnav" class="post">
             <div class="navcenter">
-                <a href="/" title="{{ config.title }}">Home</a> {% if user_is_admin %}| <a href="/admin" title="Administration Panel">Admin</a>{% endif %} {% block pages %}{% for page in page_list %}| {{ page }}{% endfor %}{% endblock %} {% block sidebar %}{% endblock %}
+                <a href="/" title="{{ config.title }}">Home</a> {% if user_is_admin %}| <a href="/admin/" title="Administration Panel">Admin</a>{% endif %} {% block pages %}{% for page in page_list %}| {{ page }}{% endfor %}{% endblock %} {% block sidebar %}{% endblock %}
             </div>
         </div>
         <div id="footer" class="post">

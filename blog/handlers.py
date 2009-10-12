@@ -2,11 +2,11 @@ import datetime
 import config
 import view
 import helpers
+import blog
 
 from urlparse import urljoin
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
-from models import blog
 
 
 class IndexHandler(webapp.RequestHandler):

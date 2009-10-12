@@ -11,8 +11,6 @@ from dateutil.relativedelta import *
 import config
 import helpers
 
-from models import blog
-
 
 class Page(object):
     def render(self, handler, template_file, template_values={}):

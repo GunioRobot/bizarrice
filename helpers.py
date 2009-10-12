@@ -4,6 +4,7 @@ import datetime
 import config
 import logging
 import xmlrpclib
+import blog
 
 from google.appengine.ext.webapp import template
 from google.appengine.ext import db
@@ -12,7 +13,6 @@ from google.appengine.api import users
 from dateutil.relativedelta import *
 from xmlrpc import GoogleXMLRPCTransport
 
-from models import blog
 
 
 def ping_services():

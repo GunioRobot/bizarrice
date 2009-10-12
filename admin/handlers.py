@@ -6,9 +6,8 @@ import logging
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
 from google.appengine.ext.webapp import template
-from google.appengine.ext.db import djangoforms
 
-from models import blog
+import blog
 
 
 class AdminHandler(webapp.RequestHandler):
@@ -40,12 +39,6 @@ def with_page(funct):
         funct(self, page)
     return decorate
 
-class PageForm(djangoforms.ModelForm):
-    class Meta():
-        model = blog.Page
-        exclude = ['body_html', '_class', 'author', 'pub_date', 'updated']
-
-
 class PageHandler(webapp.RequestHandler):
     def render_form(self, page=None, form=None):
         template_values = {
@@ -58,16 +51,16 @@ class PageHandler(webapp.RequestHandler):
 
     @with_page
     def get(self, page):
-        self.render_form(page, PageForm(instance=page))
+        self.render_form(page, blog.PageForm(instance=page))
 
     @with_page
     def post(self, page):
-        form = PageForm(data=self.request.POST, instance=page)
+        form = blog.PageForm(data=self.request.POST, instance=page)
         if self.request.get('submit') == 'Submit' and form.is_valid():
             page = form.save(commit=False)
             try:
                 page.put()
-            except blog.SlugConstraintViolation:
+            except blog.models.SlugConstraintViolation:
                 logging.error('Slug "%s" is not unique' % page.slug)
                 self.render_form(page, form)
             else:
@@ -88,7 +81,6 @@ class DeletePageHandler(webapp.RequestHandler):
         self.redirect(config.url)
 #}}}
 
-
 #{{{ Post Handlers
 def with_post(funct):
     """Credits: http://blog.notdot.net/"""
@@ -102,14 +94,6 @@ def with_post(funct):
         funct(self, post)
     return decorate
 
-class PostForm(djangoforms.ModelForm):
-    tags = djangoforms.forms.CharField(required=False)
-    class Meta():
-        model = blog.Post
-        exclude = ['body_html', '_class', 'author', 'pub_date', 'updated',
-                   'excerpt_html']
-
-
 class PostHandler(webapp.RequestHandler):
     def render_form(self, post=None, form=None):
         template_values = {
@@ -122,16 +106,16 @@ class PostHandler(webapp.RequestHandler):
 
     @with_post
     def get(self, post):
-        self.render_form(post, PostForm(instance=post))
+        self.render_form(post, blog.PostForm(instance=post))
 
     @with_post
     def post(self, post):
-        form = PostForm(data=self.request.POST, instance=post)
+        form = blog.PostForm(data=self.request.POST, instance=post)
         if self.request.get('submit') == 'Submit' and form.is_valid():
             post = form.save(commit=False)
             try:
                 post.put()
-            except blog.SlugConstraintViolation:
+            except blog.models.SlugConstraintViolation:
                 logging.error('Slug "%s" is not unique' % post.slug)
                 # TODO: provide error feedback through a rails-like flash
                 self.render_form(post, form)

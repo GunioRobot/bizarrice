@@ -12,7 +12,8 @@ import logging
 import import_wrapper
 import config
 import dateutil
-import models
+import blog
+import admin
 
 
 from getpass import getpass
