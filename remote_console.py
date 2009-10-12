@@ -12,8 +12,6 @@ import logging
 import import_wrapper
 import config
 import dateutil
-import blog
-import admin
 
 
 from getpass import getpass
@@ -49,6 +47,8 @@ def setup(email, passwd, domain, app):
     setup_gae()
     from google.appengine.ext import db
     from google.appengine.ext.remote_api import remote_api_stub
+    import blog
+    import admin
     remote_api_stub.ConfigureRemoteDatastore(app, '/remote_api', auth_func)
 
 
