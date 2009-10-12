@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>{% block title %}{% endblock %} - {{ config.title }}</title>
+    <link rel="stylesheet" href="/static/{{config.theme}}/css/style.css" type="text/css" media="screen, projection">
+    <link href="/feed" type="application/atom+xml" rel="alternate" title="{{ config.title }} Atom Feed" />
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <div id="main">
+        <div id=header>
+            {% block header%}
+            <h1><a href="/" class="logo">{{ config.title }}</a></h1>
+            {% endblock %}
+        </div>
+        {% block content %}{% endblock %}
+    </div>
+    <div id="sidebar">
+        {% block sidebar %}
+        <h2>Navigation</h2>
+        <ul>
+            <li><a href="/" title="{{ config.title }}">Home</a></li> 
+            {% if user_is_admin %}
+            <li><a href="/admin/" title="Administration Panel">Admin</a></li>
+            {% endif %}
+            {% for page in page_list %}
+            <li>{{page}}</li>
+            {% endfor %}
+        </ul>
+        {% endblock %}
+    </div>
+    {% block bodyend %}{% endblock %}
+    {% if config.google_analytics %}
+    <script type="text/javascript">
+        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+        try{
+            var pageTracker = _gat._getTracker("{{ config.google_analytics }}");
+            pageTracker._trackPageview();
+        } catch(err) {}
+    </script>
+    {% endif %}
+</body>
+</html>
