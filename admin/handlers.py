@@ -28,18 +28,6 @@ class ClearCacheHandler(webapp.RequestHandler):
 
 
 #{{{ Page Handlers
-def with_page(funct):
-    """Credits: http://blog.notdot.net/"""
-    def decorate(self, page_slug=None):
-        page = None
-        if page_slug is not None:
-            page = helpers.get_page(page_slug)
-            if page is None:
-                view.Renderer().render_error(self, 404)
-                return
-        funct(self, page)
-    return decorate
-
 class PageHandler(webapp.RequestHandler):
     def render_form(self, page=None, form=None):
         template_values = {
@@ -50,11 +38,11 @@ class PageHandler(webapp.RequestHandler):
         renderer.render(self, 'admin/page_form.html',
                         template_values)
 
-    @with_page
+    @blog.utils.with_page
     def get(self, page):
         self.render_form(page, blog.PageForm(instance=page))
 
-    @with_page
+    @blog.utils.with_page
     def post(self, page):
         form = blog.PageForm(data=self.request.POST, instance=page)
         if self.request.get('submit') == 'Submit' and form.is_valid():
@@ -83,18 +71,6 @@ class DeletePageHandler(webapp.RequestHandler):
 #}}}
 
 #{{{ Post Handlers
-def with_post(funct):
-    """Credits: http://blog.notdot.net/"""
-    def decorate(self, year=None, month=None, day=None, slug=None):
-        post = None
-        if slug is not None:
-            post = helpers.get_post(year, month, day, slug)
-            if post is None:
-                view.Renderer().render_error(self, 404)
-                return
-        funct(self, post)
-    return decorate
-
 class PostHandler(webapp.RequestHandler):
     def render_form(self, post=None, form=None):
         template_values = {
@@ -105,11 +81,11 @@ class PostHandler(webapp.RequestHandler):
         renderer.render(self, 'admin/post_form.html',
                         template_values)
 
-    @with_post
+    @blog.utils.with_post
     def get(self, post):
         self.render_form(post, blog.PostForm(instance=post))
 
-    @with_post
+    @blog.utils.with_post
     def post(self, post):
         form = blog.PostForm(data=self.request.POST, instance=post)
         if self.request.get('submit') == 'Submit' and form.is_valid():
@@ -136,7 +112,5 @@ class DeletePostHandler(webapp.RequestHandler):
             p.delete()
         memcache.flush_all()
         self.redirect(config.url)
-
 #}}}
-
 

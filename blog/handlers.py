@@ -7,6 +7,7 @@ import blog
 from urlparse import urljoin
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
+from blog.utils import with_page, with_post
 
 
 class IndexHandler(webapp.RequestHandler):
@@ -24,32 +25,23 @@ class IndexHandler(webapp.RequestHandler):
 
 
 class PageHandler(webapp.RequestHandler):
-    def get(self, slug):
-        p = helpers.get_page(slug)
+    @with_page
+    def get(self, page):
+        template_values = {
+            'page': page,
+        }
         renderer = view.Renderer()
-        if p is None:
-            renderer.render_error(self, 404)
-        else:
-            template_values = {
-                'page': p,
-            }
-            renderer.render(self, 'blog/page.html',
-                            template_values)
+        renderer.render(self, 'blog/page.html', template_values)
 
 
 class PostHandler(webapp.RequestHandler):
-    def get(self, year, month, day, slug):
-        post = helpers.get_post(year, month, day, slug)
-        if post is None:
-            renderer = view.Renderer()
-            renderer.render_error(self, 404)
-        else:
-            template_values = {
-                'post': post,
-            }
-            renderer = view.Renderer()
-            renderer.render(self, 'blog/post.html',
-                            template_values)
+    @with_post
+    def get(self, post):
+        template_values = {
+            'post': post,
+        }
+        renderer = view.Renderer()
+        renderer.render(self, 'blog/post.html', template_values)
 
 
 class TagHandler(webapp.RequestHandler):
