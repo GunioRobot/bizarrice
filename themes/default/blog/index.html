@@ -14,14 +14,12 @@
                 {% if config.disqus %}<a href="{{config.url}}{{post.get_absolute_url}}#disqus_thread">Comments</a>{% endif %}
             </div>
             <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
-            <p style="regular_post_body">
-                {% ifnotequal post.excerpt None %}
-                {{ post.excerpt_html }}
-                <div class="readmore"><a href="{{ post.get_absolute_url }}">Read more</a></div>
-                {% else %}
-                {{ post.body_html }}
-                {% endifnotequal %}
-            </p>
+            {% ifnotequal post.excerpt None %}
+            {{ post.excerpt_html }}
+            <div class="readmore"><a href="{{ post.get_absolute_url }}">Read more</a></div>
+            {% else %}
+            {{ post.body_html }}
+            {% endifnotequal %}
         </div>
         {% endfor %}
     {% else %}

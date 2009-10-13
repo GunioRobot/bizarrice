@@ -18,14 +18,12 @@
             Tags:{% for tag in post.tags %} <a href="/tag/{{ tag }}">{{ tag }}</a>{% endfor %}<br />
         </div>
         <h2>{{ post.title }}</h2>
-        <p style="regular_post_body">
-            {% ifnotequal post.excerpt None %}
-            {{ post.excerpt_html }}
-            <div class="readmore"><a href="{{ post.get_absolute_url }}">Read more</a></div>
-            {% else %}
-            {{ post.body_html }}
-            {% endifnotequal %}
-        </p>
+        {% ifnotequal post.excerpt None %}
+        {{ post.excerpt_html }}
+        <div class="readmore"><a href="{{ post.get_absolute_url }}">Read more</a></div>
+        {% else %}
+        {{ post.body_html }}
+        {% endifnotequal %}
     </div>
     {% if config.disqus %}
         <div id="disqus_thread">
