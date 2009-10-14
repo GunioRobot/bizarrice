@@ -168,3 +168,19 @@ class AtomHandler(webapp.RequestHandler):
         self.response.headers["Content-Type"] = "application/atom+xml"
         renderer.render(self, 'blog/atom.xml', template_values)
 
+
+class SitemapHandler(webapp.RequestHandler):
+    def get(self):
+        sitemap = memcache.get('sitemap.xml')
+        if sitemap is None:
+            pub = blog.models.Publishable.all().order('-pub_date').fetch(1000)
+            tags = [t['url'] for t in helpers.get_tag_list()]
+            template_values = {
+                'tags': tags,
+                'urlset': pub,
+                'config': config,
+            }
+            rendered = view.Renderer().theme_template('blog/sitemap.xml',
+                                                      template_values)
+            memcache.set('sitemap.xml', rendered)
+        self.response.out.write(sitemap)

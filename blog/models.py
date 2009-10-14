@@ -69,7 +69,12 @@ class Publishable(polymodel.PolyModel):
 
     def put(self):
         self.update_markdown_fields()
+        memcache.delete('sitemap.xml')
         return super(Publishable, self).put()
+
+    def get_absolute_url(self):
+        raise NotImplementedError, ("get_absolute_url must be implemented for"
+                                    " every Publishable model.")
 
 
 class Page(Publishable):

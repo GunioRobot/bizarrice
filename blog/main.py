@@ -17,6 +17,7 @@ def main():
         [('/', IndexHandler),
          ('/feed', FeedburnerHandler),
          ('/atom.xml', AtomHandler),
+         ('/sitemap.xml', SitemapHandler),
          ('/tag/([-\w]+)', TagHandler),
          ('/([-\w]+)', PageHandler),
          ('/(\d{4})', YearHandler),

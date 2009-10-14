@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{% spaceless %}
+<url>
+    <loc>{{config.url|escape}}/</loc>
+    <lastmod>{{ urlset.0.updated|rfc3339 }}</lastmod>
+    <priority>1.0</priority>
+</url>
+{% for url in urlset %}
+  <url>
+      <loc>{{ config.url|escape }}{{ url.get_absolute_url|escape }}</loc>
+      <lastmod>{{ url.updated|rfc3339 }}</lastmod>
+  </url>
+{% endfor %}
+{% for tag in tags %}
+<url><loc>{{ config.url|escape }}{{tag|escape}}</loc></url>
+{% endfor %}
+{% endspaceless %}
+</urlset>
