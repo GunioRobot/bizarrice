@@ -20,40 +20,17 @@ def save_backup(item, directory, has_tags=False):
     fd.write('\n')
     fd.write(item.body.encode('utf-8'))
 
-def backup_posts(count=False, offset=0):
+def backup_posts():
     from blog.models import Post
 
-    if not count:
-        count = 1000
-    else:
-        count = Post.all().count()
-        while count > 1000:
-            backup_posts(1000, offset)
-            count -= 1000
-            offset += 1000
-
-    if count == 0:
-        return
-
-    posts = Post.all().fetch(count, offset=offset)
+    posts = Post.all().fetch(1000)
     for post in posts:
         save_backup(post, 'posts', has_tags=True)
 
 def backup_pages(count=False, offset=0):
     from blog.models import Page
 
-    if not count:
-        count = 1000
-    else:
-        count = Page.all().count()
-        while count > 1000:
-            backup_pages(1000, offset)
-            count -= 1000
-            offset += 1000
-
-    if count == 0:
-        return
-    pages = Page.all().fetch(count, offset=offset)
+    pages = Page.all().fetch(1000)
     for page in pages:
         save_backup(page, 'pages')
 
