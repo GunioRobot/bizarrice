@@ -135,7 +135,7 @@ class Post(Publishable):
         # Split tags and ensure none is repeated.
         # The splitting is needed because we change the field
         # type for tags on controllers.admin.PostForm
-        tags = ' '.join(self.tags).split()
+        tags = ' '.join(self.tags).lower().split()
         tags = map(slugify,list(set(tags)))
         self.tags = tags
 
