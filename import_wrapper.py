@@ -15,6 +15,7 @@ except ImportError, e:
     # Make the appengine libs available if we want to use ipython or something.
     sys.path.append('/opt/google-appengine/')
     sys.path.append('/opt/google-appengine/lib/yaml/')
+    sys.path.append('/opt/google-appengine/lib/webob/')
 
 root = config.APP_ROOT_DIR
 

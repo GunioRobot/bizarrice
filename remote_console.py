@@ -28,6 +28,8 @@ def setup_gae():
         if gaepath.search(path):
             sys.path.append(path)
             sys.path.append('%s/lib/yaml/lib/' % path)
+            sys.path.append('%s/lib/webob/' % path)
+            sys.path.append('%s/lib/django/' % path)
             break
 
 def setup(email, passwd, domain, app):

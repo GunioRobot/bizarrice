@@ -14,22 +14,29 @@ from dateutil.relativedelta import *
 from xmlrpc import GoogleXMLRPCTransport
 
 
-
 def ping_services():
-    if config.pingomatic and not config.debug:
-        logging.debug('Trying to ping Ping-o-Matic')
-        rpc_server = xmlrpclib.ServerProxy('http://rpc.pingomatic.com',
-                                           GoogleXMLRPCTransport())
-        blog_name = config.title
-        blog_url = config.url
-        blog_feed = '%s/feed'
-        response = rpc_server.weblogUpdates.ping(blog_name, blog_url,
-                                                 blog_feed)
-        msg = response.get('message', '(No message on RPC result)')
-        if response.get('flerror'):
-            logging.error('Ping error from Ping-o-Matic: %s' % msg)
-        else:
-            logging.debug('Ping-o-Matic ping OK: %s' % msg)
+    logging.debug('Starting ping_services()')
+    if not config.debug:
+        if config.pingomatic:
+            ping_service('http://rpc.pingomatic.com/', 'Ping-o-Matic')
+        if config.feedburner:
+            ping_feedburner('http://ping.feedburner.com/', 'FeedBurner')
+
+def ping_service(endpoint, name=None):
+    if name is None:
+        name = endpoint
+    logging.debug('Pinging %s' % name)
+
+    rpc_server = xmlrpclib.ServerProxy(endpoint, GoogleXMLRPCTransport())
+    feed_url = '%s/feed' % config.url
+    response = rpc_server.weblogUpdates.ping(config.title, config.url,
+                                             feed_url)
+
+    msg = response.get('message', '(No message on RPC result)')
+    if response.get('flerror'):
+        logging.error('Ping error from %s: %s' % (name, msg))
+    else:
+        logging.debug('%s ping OK: %s' % (name, msg))
 
 def get_post(year, month, day, slug):
     post = memcache.get('post-%s' % slug)
