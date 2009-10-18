@@ -13,11 +13,11 @@ except ImportError, e:
     warnings.filterwarnings('ignore',
                             message=r'Module .*? is being added to sys.path', append=True)
     # Make the appengine libs available if we want to use ipython or something.
-    sys.path.insert(0, '/opt/google-appengine/')
-    sys.path.insert(0, '/opt/google-appengine/lib/yaml/')
+    sys.path.append('/opt/google-appengine/')
+    sys.path.append('/opt/google-appengine/lib/yaml/')
 
 root = config.APP_ROOT_DIR
 
-sys.path.insert(0, os.path.join(root, 'lib'))
+sys.path.append(os.path.join(root, 'lib'))
 for ziplib_fn in glob.glob(os.path.join(root, 'lib/zip', '*.zip')):
-    sys.path.insert(0, ziplib_fn)
+    sys.path.append(ziplib_fn)

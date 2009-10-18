@@ -1,9 +1,11 @@
-import import_wrapper
 import config
 import logging
 import helpers
 import view
 import re
+
+import pygments
+from markdown import Markdown
 
 
 def with_page(funct):
@@ -39,18 +41,10 @@ def markdown(text, **kwargs):
         * extra: appends given extensions to the preset list.
     Every other initialization keyword argument for python-markdown is
     accepted and passed without validation. Use with care."""
-    try:
-        import markdown
-    except ImportError:
-        logging.error('Unable to load markdown module')
-        if config.debug:
-            raise ImportError, 'Unable to load markdown module'
-        else:
-            return text
     extensions = kwargs.pop('extensions', False) or ['extra', 'codehilite',
                                                      'toc']
     extensions += kwargs.pop('extra', [])
-    md = markdown.Markdown(extensions=extensions, **kwargs)
+    md = Markdown(extensions=extensions, **kwargs)
     return md.convert(text)
 
 def slugify(value):
