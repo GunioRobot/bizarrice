@@ -136,7 +136,7 @@ class Post(Publishable):
         # The splitting is needed because we change the field
         # type for tags on controllers.admin.PostForm
         tags = ' '.join(self.tags).split()
-        tags = list(set(tags))
+        tags = map(slugify,list(set(tags)))
         self.tags = tags
 
         self.test_slug_collision(True)
