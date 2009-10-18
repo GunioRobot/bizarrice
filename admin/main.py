@@ -17,7 +17,7 @@ def main():
          ('/admin/post/new', PostHandler),
          ('/admin/post/edit/(\d{4})/(\d{2})/(\d{2})/([-\w]+)',
           PostHandler),
-         ('/admin/delete/post/(\d{4})/(\d{2})/(\d{2})/([-\w]+)',
+         ('/admin/post/delete/(\d{4})/(\d{2})/(\d{2})/([-\w]+)',
           DeletePostHandler),
          ('/admin/page/new', PageHandler),
          ('/admin/page/edit/([-\w]+)', PageHandler),

@@ -63,12 +63,11 @@ class PageHandler(webapp.RequestHandler):
 
 
 class DeletePageHandler(webapp.RequestHandler):
-    def get(self, slug):
-        p = helpers.get_page(slug)
-        if p is not None:
-            p.delete()
+    @blog.utils.with_page
+    def get(self, page):
+        page.delete()
         memcache.flush_all()
-        self.redirect(config.url)
+        self.redirect('/admin/')
 #}}}
 
 #{{{ Post Handlers
@@ -107,11 +106,10 @@ class PostHandler(webapp.RequestHandler):
 
 
 class DeletePostHandler(webapp.RequestHandler):
-    def get(self, year, month, day, slug):
-        p = helpers.get_post(year, month, day, slug)
-        if p is not None:
-            p.delete()
+    @blog.utils.with_post
+    def get(self, post):
+        post.delete()
         memcache.flush_all()
-        self.redirect(config.url)
+        self.redirect('/admin/')
 #}}}
 
