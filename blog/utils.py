@@ -1,5 +1,9 @@
+import import_wrapper
+import config
+import logging
 import helpers
 import view
+import re
 
 
 def with_page(funct):
@@ -26,3 +30,34 @@ def with_post(funct):
         funct(self, post)
     return decorate
 
+def markdown(text, **kwargs):
+    """Converts given `text` to html using python-markdown.
+
+    This is meant to centralize markdown usage throughout Bizarrice.
+    Keyword list arguments:
+        * extensions: replaces every preset extension for the ones given.
+        * extra: appends given extensions to the preset list.
+    Every other initialization keyword argument for python-markdown is
+    accepted and passed without validation. Use with care."""
+    try:
+        import markdown
+    except ImportError:
+        logging.error('Unable to load markdown module')
+        if config.debug:
+            raise ImportError, 'Unable to load markdown module'
+        else:
+            return text
+    extensions = kwargs.pop('extensions', False) or ['extra', 'codehilite',
+                                                     'toc']
+    extensions += kwargs.pop('extra', [])
+    md = markdown.Markdown(extensions=extensions, **kwargs)
+    return md.convert(text)
+
+def slugify(value):
+    """
+    Adapted from Django's django.template.defaultfilters.slugify.
+    """
+    import unicodedata
+    value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
+    value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
+    return re.sub('[-\s]+', '-', value)

@@ -3,21 +3,12 @@ import datetime
 import re
 import logging
 import smartypants
-from markdown2 import markdown
 
 from google.appengine.ext import db
 from google.appengine.ext.db import polymodel
 from google.appengine.api import memcache
+from blog import utils
 
-
-def slugify(value):
-    """
-    Adapted from Django's django.template.defaultfilters.slugify.
-    """
-    import unicodedata
-    value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
-    value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
-    return re.sub('[-\s]+', '-', value)
 
 class Publishable(polymodel.PolyModel):
     title = db.StringProperty(required=True)
@@ -35,8 +26,7 @@ class Publishable(polymodel.PolyModel):
                               % self.__class__.__name__)
                 continue
             if getattr(self, key) is not None:
-                data = markdown(getattr(self, key), extras=['code-color',
-                                                            'footnotes'])
+                data = utils.markdown(getattr(self, key))
                 data = smartypants.smartyPants(data)
                 setattr(self, value, data)
 
@@ -44,7 +34,7 @@ class Publishable(polymodel.PolyModel):
         # Auto-filling slug field, if needed.
         if self.slug is None or len(self.slug.strip()) == 0:
             self.slug = self.title
-        self.slug = slugify(self.slug)
+        self.slug = utils.slugify(self.slug)
 
         # Create a query to check for slug uniqueness
         query = self.all(keys_only=True)
@@ -136,7 +126,7 @@ class Post(Publishable):
         # The splitting is needed because we change the field
         # type for tags on controllers.admin.PostForm
         tags = ' '.join(self.tags).lower().split()
-        tags = map(slugify,list(set(tags)))
+        tags = map(utils.slugify,list(set(tags)))
         self.tags = tags
 
         self.test_slug_collision(True)
