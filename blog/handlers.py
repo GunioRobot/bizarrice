@@ -1,13 +1,13 @@
 import datetime
 import config
 import view
-import helpers
 import blog
+import blog.utils
 
+from blog.utils import with_page, with_post
 from urlparse import urljoin
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
-from blog.utils import with_page, with_post
 
 
 class IndexHandler(webapp.RequestHandler):
@@ -174,7 +174,7 @@ class SitemapHandler(webapp.RequestHandler):
         sitemap = memcache.get('sitemap.xml')
         if sitemap is None:
             pub = blog.models.Publishable.all().order('-pub_date').fetch(1000)
-            tags = [t['url'] for t in helpers.get_tag_list()]
+            tags = [t['url'] for t in blog.utils.get_tag_list()]
             template_values = {
                 'tags': tags,
                 'urlset': pub,

@@ -1,8 +1,8 @@
 import import_wrapper
 import view
-import helpers
 import config
 import logging
+import helpers
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
@@ -97,6 +97,7 @@ class PostHandler(webapp.RequestHandler):
                 # TODO: provide error feedback through a rails-like flash
                 self.render_form(post, form)
             else:
+                helpers.ping_services()
                 self.redirect(post.get_absolute_url())
         else:
             if form.is_valid():
