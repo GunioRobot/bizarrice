@@ -9,13 +9,19 @@ try:
 except ImportError, e:
     # Don't show warnings for libs found in the apps lib directory that are also
     #  installed in site-packages or via setuptools.
+    import re
     import warnings
     warnings.filterwarnings('ignore',
                             message=r'Module .*? is being added to sys.path', append=True)
     # Make the appengine libs available if we want to use ipython or something.
-    sys.path.append('/opt/google-appengine/')
-    sys.path.append('/opt/google-appengine/lib/yaml/')
-    sys.path.append('/opt/google-appengine/lib/webob/')
+    gaepath = re.compile(r'google[-_]appengine')
+    for path in os.environ['PATH'].split(':'):
+        if gaepath.search(path):
+            sys.path.append(path)
+            sys.path.append('%s/lib/yaml/lib/' % path)
+            sys.path.append('%s/lib/webob/' % path)
+            sys.path.append('%s/lib/django/' % path)
+            break
 
 root = config.APP_ROOT_DIR
 
