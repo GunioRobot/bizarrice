@@ -150,10 +150,6 @@ def get_page_list():
         return pages
 
     page_list = []
-    query = blog.Page.all().order('index')
-    for page in query:
-        url = '<a href="%s" title="%s">%s</a>' % (page.get_absolute_url(),
-                                                  page.title, page.title)
-        page_list.append(url)
+    page_list = blog.Page.all().order('index').fetch(1000)
     memcache.set('page_list', page_list)
     return page_list

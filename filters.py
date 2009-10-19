@@ -18,6 +18,18 @@ JSONTIME = 'http://json-time.appspot.com/time.json'
 def rfc3339(date):
     return date.strftime("%Y-%m-%dT%H:%M:%SZ")
 
+
+class UTC(datetime.tzinfo):
+    def utcoffset(self, dt):
+        return datetime.timedelta(0)
+
+    def tzname(self, dt):
+        return 'UTF'
+
+    def dst(self, dt):
+        return datetime.timedelta(0)
+utc = UTC()
+
 @register.filter
 def tz_date(date, fmt="%F %d %Y %H:%M"):
     tz = memcache.get('tz')
@@ -84,17 +96,27 @@ def date_diff(d):
             count = round((delta_midnight.days + 1)/chunk, 0)
             break
 
-    return ('%(number)d %(type)s ago') % \
-            {'number': count, 'type': name(count)}
+    return ('%d %s ago') % (count, name(count))
 
+@register.filter
+def links_for_models(model_list, separator=None, use_ul=False):
+    fmt = ('%(before)s<a href="%(link)s" '
+           'title="%(title)s">%(title)s</a>%(after)s')
+    if use_ul:
+        values = dict(begin='<ul>', end='</ul>', before='<li>', after='</li>')
+    else:
+        values = dict(begin='', end='', before='', after='')
+    if separator is None:
+        separator = ''
 
-class UTC(datetime.tzinfo):
-    def utcoffset(self, dt):
-        return datetime.timedelta(0)
+    result = []
+    for model in model_list:
+        values['link'] = model.get_absolute_url()
+        values['title'] = model.title
+        result.append(fmt % values)
+    values['result'] = separator.join(result)
+    return '%(begin)s%(result)s%(end)s' % values
 
-    def tzname(self, dt):
-        return 'UTF'
-
-    def dst(self, dt):
-        return datetime.timedelta(0)
-utc = UTC()
+@register.filter
+def ul_links_for_models(model_list, separator=None):
+    return links_for_models(model_list, separator, True)
