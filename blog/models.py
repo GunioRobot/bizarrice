@@ -59,12 +59,16 @@ class Publishable(polymodel.PolyModel):
 
     def put(self):
         self.update_markdown_fields()
-        memcache.delete('sitemap.xml')
-        return super(Publishable, self).put()
+        key = super(Publishable, self).put()
+        self.clear_cache()
+        return key
 
     def get_absolute_url(self):
         raise NotImplementedError, ("get_absolute_url must be implemented for"
                                     " every Publishable model.")
+
+    def clear_cache(self):
+        memcache.delete('sitemap.xml')
 
 
 class Page(Publishable):
@@ -86,10 +90,13 @@ class Page(Publishable):
         else:
             return "/admin/page/edit%s" % self.get_absolute_url()
 
-    def put(self):
+    def clear_cache(self):
         memcache.delete('page_list')
+        memcache.delete('page%s' % self.get_absolute_url)
+        super(Page, self).clear_cache()
+
+    def put(self):
         self.test_slug_collision(False)
-        memcache.delete('page-%s' % self.slug)
         return super(Page, self).put()
 
 
@@ -114,14 +121,17 @@ class Post(Publishable):
     def get_edit_url(self):
         return "/admin/post/edit%s" % self.get_absolute_url()
 
-    def put(self):
+    def clear_cache(self):
         # Delete the cached archive list if we are saving a new post
         if not self.is_saved():
             memcache.delete('archive_list')
         # Delete the cached tag list whenever a post is created/updated
         memcache.delete('tag_list')
         memcache.delete('atom')
+        memcache.delete('post%s' % self.get_absolute_url())
+        super(Post, self).clear_cache()
 
+    def _normalize_tags(self):
         # Split tags and ensure none is repeated.
         # The splitting is needed because we change the field
         # type for tags on controllers.admin.PostForm
@@ -129,8 +139,9 @@ class Post(Publishable):
         tags = map(utils.slugify,list(set(tags)))
         self.tags = tags
 
+    def put(self):
+        self._normalize_tags()
         self.test_slug_collision(True)
-        memcache.delete('post-%s' % self.slug)
         return super(Post, self).put()
 
 

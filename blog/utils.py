@@ -62,7 +62,8 @@ def slugify(value):
     return re.sub('[-\s]+', '-', value)
 
 def get_post(year, month, day, slug):
-    post = memcache.get('post-%s' % slug)
+    cached_id = 'post/%s/%s/%s/%s' % (year, month, day, slug)
+    post = memcache.get(cached_id)
     if post is None:
         year = int(year)
         month = int(month)
@@ -79,7 +80,7 @@ def get_post(year, month, day, slug):
         query.filter('pub_date < ', end_date)
         query.filter('slug = ', slug)
         post = query.get()
-        memcache.set('post-%s' % slug, post)
+        memcache.set(cached_id, post)
     return post
 
 def get_page(slug):
