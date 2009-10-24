@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python2.5
 #
 # Copyright 2007 Google Inc.
 #
@@ -65,6 +65,7 @@ def main(argv):
     (options, args) = parser.parse_args()
 
     if not args or len(args) > 2:
+        import sys
         print >> sys.stderr, __doc__
         if len(args) > 2:
           print >> sys.stderr, 'Unexpected arguments: %s' % args[2:]
