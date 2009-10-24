@@ -21,14 +21,17 @@ def ping_services():
         # PubSubHubbub
         ping_http_service('http://pubsubhubbub.appspot.com/',
                           {'hub.url': '%s/feed' % config.url,
-                           'hub.mode': 'publish'})
+                           'hub.mode': 'publish'},
+                          name='PubSubHubbub')
         # Sitemaps ping
         ping_http_service('http://www.google.com/webmasters/tools/ping',
-                          {'sitemap': '%s/sitemap.xml' % confir.url},
+                          {'sitemap': '%s/sitemap.xml' % config.url},
+                          name='Sitemaps'
                           mode=urlfetch.GET)
         # Blogsearch
         ping_http_service('http://blogsearch.google.com/ping',
-                          {'url': '%s/feed' % config.url})
+                          {'url': '%s/feed' % config.url},
+                          name='Google BlogSearch')
 
 def ping_xmlrpc_service(endpoint, name=None):
     if name is None:
