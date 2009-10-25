@@ -180,7 +180,7 @@ class SitemapHandler(webapp.RequestHandler):
                 'urlset': pub,
                 'config': config,
             }
-            rendered = view.Renderer().theme_template('blog/sitemap.xml',
-                                                      template_values)
-            memcache.set('sitemap.xml', rendered)
+            sitemap = view.Renderer().theme_template('blog/sitemap.xml',
+                                                     template_values)
+            memcache.set('sitemap.xml', sitemap)
         self.response.out.write(sitemap)
