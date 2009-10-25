@@ -3,6 +3,7 @@ import config
 import logging
 
 from dateutil import parser
+from smartypants import smartyPants
 from google.appengine.api import memcache
 from google.appengine.api import urlfetch
 from google.appengine.ext.webapp import template
@@ -120,3 +121,8 @@ def links_for_models(model_list, separator=None, use_ul=False):
 @register.filter
 def ul_links_for_models(model_list, separator=None):
     return links_for_models(model_list, separator, True)
+
+@register.filter
+def smartypants(text):
+    return smartyPants(text)
+

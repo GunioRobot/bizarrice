@@ -17,7 +17,7 @@
             {{ post.pub_date|date_diff }}<br />
             Tags:{% for tag in post.tags %} <a href="/tag/{{ tag }}">{{ tag }}</a>{% endfor %}<br />
         </div>
-        <h2>{{ post.title }}</h2>
+        <h2>{{ post.title|smartypants }}</h2>
         {{ post.body_html }}
     </div>
     {% if config.disqus %}

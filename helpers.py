@@ -14,10 +14,10 @@ def ping_services():
     if not config.debug:
         if config.pingomatic:
             ping_xmlrpc_service('http://rpc.pingomatic.com/',
-                                'Ping-o-Matic')
+                                name='Ping-o-Matic')
         if config.feedburner:
             ping_xmlrpc_service('http://ping.feedburner.com/',
-                                'FeedBurner')
+                                name='FeedBurner')
         # PubSubHubbub
         ping_http_service('http://pubsubhubbub.appspot.com/',
                           {'hub.url': '%s/feed' % config.url,
@@ -26,7 +26,7 @@ def ping_services():
         # Sitemaps ping
         ping_http_service('http://www.google.com/webmasters/tools/ping',
                           {'sitemap': '%s/sitemap.xml' % config.url},
-                          name='Sitemaps'
+                          name='Sitemaps',
                           mode=urlfetch.GET)
         # Blogsearch
         ping_http_service('http://blogsearch.google.com/ping',

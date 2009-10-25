@@ -13,7 +13,7 @@
                 Tags:{% for tag in post.tags %} <a href="/tag/{{ tag }}">{{ tag }}</a>{% endfor %}<br />
                 {% if config.disqus %}<a href="{{config.url}}{{post.get_absolute_url}}#disqus_thread">Comments</a>{% endif %}
             </div>
-            <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+            <h2><a href="{{ post.get_absolute_url }}">{{ post.title|smartypants }}</a></h2>
             {% ifnotequal post.excerpt None %}
             {{ post.excerpt_html }}
             <div class="readmore"><a href="{{ post.get_absolute_url }}">Read more</a></div>
