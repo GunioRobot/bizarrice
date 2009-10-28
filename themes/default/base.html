@@ -23,7 +23,7 @@
         </div>
         <div id="bottomnav" class="post">
             <div class="navcenter">
-                <a href="/" title="{{ config.title }}">Home</a> {% if user_is_admin %}| <a href="/admin/" title="Administration Panel">Admin</a>{% endif %} {% if page_list %}| {{page_list|links_for_models:" |"|smartypants}}{% endif %}{% block sidebar %}{% endblock %} | <a href="/feed" title="{{config.title}} Atom feed">Feed</a>
+                <a href="/" title="{{ config.title }}">Home</a> {% if user_is_admin %}| <a href="/admin/" title="Administration Panel">Admin</a>{% endif %}{% if page_list %} | {{page_list|links_for_models:" | "|smartypants}}{% endif %}{% block sidebar %}{% endblock %} | <a href="/feed" title="{{config.title}} Atom feed">Feed</a>
             </div>
         </div>
         <div id="footer" class="post">
