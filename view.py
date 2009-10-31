@@ -31,13 +31,7 @@ class Renderer(object):
         return templ
 
     def render(self, handler, template_file, template_values={}):
-        """Render a template"""
-        #archive_list = utils.get_archive_list()
-        #tag_list = utils.get_tag_list()
-
         values = {
-            #'archive_list': archive_list,
-            #'tag_list': tag_list,
             'page_list': utils.get_page_list(),
             'user': users.get_current_user(),
             'user_is_admin': users.is_current_user_admin(),
@@ -52,16 +46,17 @@ class Renderer(object):
                                template_file, template_values={}):
         """Paginate a query and render the requested page"""
         num = config.items_per_page
-        offset = string.atoi(handler.request.get('offset') or str(0))
+        page = int(handler.request.get('page', 0))
+        offset = (page * num) if page > 0 else 0
 
         items = query.fetch(num + 1, offset)
 
         values = {values_name: items}
         if len(items) > num:
-            values.update({'next_offset': str(offset + num)})
+            values.update({'prev_page': str(offset + num)})
             items.pop()
         if offset > 0:
-            values.update({'prev_offset': str(offset - num)})
+            values.update({'next_page': str(offset - num)})
         template_values.update(values)
 
         self.render(handler, template_file, template_values)

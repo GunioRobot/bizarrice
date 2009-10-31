@@ -27,13 +27,13 @@
         <h2>No Posts Found</h2>
     </div>
     {% endif %}
-    {% if prev_offset or next_offset %}
+    {% if prev_page or next_page %}
         <div class="span-16 last append-bottom">
-            {% if prev_offset %}
-            <a href="?offset={{ prev_offset }}">Previous Posts</a>
+            {% if prev_page %}
+            &#171; <a class="pagination" href="?page={{ prev_page }}">Previous</a>
             {% endif %}
-            {% if next_offset %}
-            <a href="?offset={{ next_offset }}">More Posts</a>
+            {% if next_page %}
+            <a class="pagination" href="?page={{ next_page }}">Next</a> &#187;
             {% endif %}
         </div>
     {% endif %}

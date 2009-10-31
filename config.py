@@ -8,7 +8,7 @@ title = 'Blog Title'
 description = 'Description'
 author = 'Author'
 email = 'Email'
-url = 'BlogURL'
+url = 'http://localhost:8080'
 keywords = 'some, keywords, for your, blog'
 items_per_page = 10
 # The Blog theme. It should be the name of the directory under 'themes/'
