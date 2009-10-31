@@ -53,10 +53,10 @@ class Renderer(object):
 
         values = {values_name: items}
         if len(items) > num:
-            values.update({'prev_page': str(offset + num)})
+            values.update({'prev_page': str(page + 1)})
             items.pop()
         if offset > 0:
-            values.update({'next_page': str(offset - num)})
+            values.update({'next_page': str(page - 1)})
         template_values.update(values)
 
         self.render(handler, template_file, template_values)
