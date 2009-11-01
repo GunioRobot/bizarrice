@@ -50,8 +50,6 @@ def _jsontime_timezone(zone):
                 logging.error('Invalid timezone "%s" in config.py. '
                               'Falling back to UTC.' % zone)
             else:
-                import_wrapper.load_zip('dateutil')
-                from dateutil import parser
                 logging.info(json['datetime'])
                 date = parser.parse(json['datetime'])
                 tz = date.tzinfo
@@ -59,6 +57,9 @@ def _jsontime_timezone(zone):
 
 @register.filter
 def tz_date(date, fmt="%F %d %Y %H:%M"):
+    # without this, unpickling from memcache fails badly
+    import_wrapper.load_zip('dateutil')
+    from dateutil import parser
     tz = memcache.get('tz')
     if tz is None:
         zone = config.timezone
