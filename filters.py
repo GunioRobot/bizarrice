@@ -13,7 +13,6 @@ from django.utils.simplejson import decoder
 
 
 register = template.create_template_register()
-JSONTIME = 'http://json-time.appspot.com/time.json'
 
 @register.filter
 def rfc3339(date):
@@ -31,34 +30,42 @@ class UTC(datetime.tzinfo):
         return datetime.timedelta(0)
 utc = UTC()
 
+def _jsontime_timezone(zone):
+    """Fetches tzinfo objects from json-time service."""
+    endpoint = 'http://json-time.appspot.com/time.json'
+    tz = utc
+
+    result = urlfetch.fetch('%s?tz=%s' % (endpoint, zone))
+
+    if result.status_code != 200:
+        logging.error('Service JsonTime returned unexpected status code: %d'
+                      % result.status_code)
+    else:
+        try:
+            json = decoder.JSONDecoder().decode(result.content)
+        except ValueError:
+            logging.error('Service JsonTime returned non-json content')
+        else:
+            if json['error']:
+                logging.error('Invalid timezone "%s" in config.py. '
+                              'Falling back to UTC.' % zone)
+            else:
+                import_wrapper.load_zip('dateutil')
+                from dateutil import parser
+                logging.info(json['datetime'])
+                date = parser.parse(json['datetime'])
+                tz = date.tzinfo
+    return tz
+
 @register.filter
 def tz_date(date, fmt="%F %d %Y %H:%M"):
     tz = memcache.get('tz')
     if tz is None:
         zone = config.timezone
-        result = urlfetch.fetch('%s?tz=%s' % (JSONTIME, zone))
-        if result.status_code != 200:
-            logging.error('Service %s returned unexpected status code: %d'
-                          % (JSONTIME, result.status_code))
+        if not zone:
             tz = utc
         else:
-            try:
-                json = decoder.JSONDecoder().decode(result.content)
-            except ValueError:
-                logging.error('Service %s returned non-json content'
-                              % JSONTIME)
-                tz = utc
-            else:
-                if json['error']:
-                    logging.error('Invalid timezone "%s" in config.py. '
-                                  'Falling back to UTC.' % zone)
-                    tz = utc
-                else:
-                    import_wrapper.load_zip('dateutil')
-                    from dateutil import parser
-                    logging.info(json['datetime'])
-                    date = parser.parse(json['datetime'])
-                    tz = date.tzinfo
+            tz = _jsontime_timezone(zone)
         memcache.set('tz', tz)
     return date.replace(tzinfo=utc).astimezone(tz).strftime(fmt)
 
