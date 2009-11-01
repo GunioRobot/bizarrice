@@ -1,30 +1,36 @@
 import sys
-import glob
 import os
-import config
-# This assumes that you don't have the app-engine stuff in your import path by default.
-try:
-    import google
 
-except ImportError, e:
-    # Don't show warnings for libs found in the apps lib directory that are also
-    #  installed in site-packages or via setuptools.
-    import re
-    import warnings
-    warnings.filterwarnings('ignore',
-                            message=r'Module .*? is being added to sys.path', append=True)
-    # Make the appengine libs available if we want to use ipython or something.
-    gaepath = re.compile(r'google[-_]appengine')
-    for path in os.environ['PATH'].split(':'):
-        if gaepath.search(path):
-            sys.path.append(path)
-            sys.path.append('%s/lib/yaml/lib/' % path)
-            sys.path.append('%s/lib/webob/' % path)
-            sys.path.append('%s/lib/django/' % path)
-            break
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'lib'))
 
-root = config.APP_ROOT_DIR
+def setup_gae_dev():
+    """Sets up PYTHONPATH to allow importing gae modules."""
+    try:
+        import google
+    except ImportError:
+        import re
+        gaepath = re.compile(r'google[-_]appengine')
+        for path in os.environ['PATH'].split(':'):
+            if gaepath.search(path):
+                sys.path.append(path)
+                sys.path.append(os.path.join(path, 'lib/yaml/lib'))
+                sys.path.append(os.path.join(path, 'lib/webob'))
+                sys.path.append(os.path.join(path, 'lib/django'))
+                break
 
-sys.path.append(os.path.join(root, 'lib'))
-for ziplib_fn in glob.glob(os.path.join(root, 'lib/zip', '*.zip')):
-    sys.path.append(ziplib_fn)
+def load_zip(modulename):
+    """Enables importing the module `modulename` at lib/zip/."""
+    zipfile = '%s.zip' % modulename
+    path = os.path.join(os.path.dirname(__file__), 'lib/zip/', zipfile)
+    sys.path.append(path)
+
+# from Nick's bloggart
+# see issue772: http://code.google.com/p/googleappengine/issues/detail?id=772
+ultimate_sys_path = None
+
+def fix_sys_path():
+    global ultimate_sys_path
+    if ultimate_sys_path is None:
+        ultimate_sys_path = list(sys.path)
+    else:
+        sys.path[:] = ultimate_sys_path

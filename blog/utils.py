@@ -1,16 +1,10 @@
-import config
-import logging
 import view
-import re
 import datetime
 import blog
-import pygments
 
-from markdown import Markdown
 from google.appengine.ext.webapp import template
 from google.appengine.ext import db
 from google.appengine.api import memcache
-from dateutil.relativedelta import *
 
 
 def with_page(funct):
@@ -46,6 +40,9 @@ def markdown(text, **kwargs):
         * extra: appends given extensions to the preset list.
     Every other initialization keyword argument for python-markdown is
     accepted and passed without validation. Use with care."""
+    import import_wrapper
+    import_wrapper.fix_sys_path()
+    from markdown import Markdown
     extensions = kwargs.pop('extensions', False) or ['extra', 'codehilite',
                                                      'toc']
     extensions += kwargs.pop('extra', [])
@@ -56,6 +53,7 @@ def slugify(value):
     """
     Adapted from Django's django.template.defaultfilters.slugify.
     """
+    import re
     import unicodedata
     value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
     value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
@@ -94,6 +92,10 @@ def get_page(slug):
 
 def get_archive_list():
     """Return a list of the archive months and their article counts."""
+    import import_wrapper
+    import_wrapper.load_zip('dateutil')
+    from dateutil.relativedelta import relativedelta
+
     # Attempt to get a memcache'd copy first
     archive = memcache.get('archive_list')
     if archive is not None:

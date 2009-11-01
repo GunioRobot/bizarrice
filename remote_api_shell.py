@@ -22,7 +22,6 @@ Usage:
 """
 
 
-import import_wrapper
 import atexit
 import code
 import getpass
@@ -36,8 +35,10 @@ try:
 except ImportError:
     readline = None
 
-from google.appengine.ext.remote_api import remote_api_stub
+import import_wrapper
+import_wrapper.setup_gae_dev()
 
+from google.appengine.ext.remote_api import remote_api_stub
 from google.appengine.api import datastore
 from google.appengine.api import memcache
 from google.appengine.api import urlfetch

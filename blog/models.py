@@ -1,8 +1,6 @@
-import import_wrapper
 import datetime
 import re
 import logging
-import smartypants
 
 from google.appengine.ext import db
 from google.appengine.ext.db import polymodel
@@ -18,6 +16,8 @@ class Publishable(polymodel.PolyModel):
     author = db.UserProperty(auto_current_user_add=True)
 
     def update_markdown_fields(self):
+        import import_wrapper
+        import smartypants
         if not hasattr(self, 'markdown_map'):
             return
         for key, value in self.markdown_map:

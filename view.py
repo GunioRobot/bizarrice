@@ -1,19 +1,14 @@
 import os
-import string
-import datetime
 import logging
 
 from google.appengine.ext.webapp import template
 from google.appengine.ext import db
 from google.appengine.api import memcache
 from google.appengine.api import users
-from dateutil.relativedelta import *
 from django.template import TemplateDoesNotExist
 
 import blog
 import config
-
-from blog import utils
 
 
 class Renderer(object):
@@ -32,7 +27,7 @@ class Renderer(object):
 
     def render(self, handler, template_file, template_values={}):
         values = {
-            'page_list': utils.get_page_list(),
+            'page_list': blog.utils.get_page_list(),
             'user': users.get_current_user(),
             'user_is_admin': users.is_current_user_admin(),
             'config': config,

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import import_wrapper
-
 import config
 import error
 import wsgiref.handlers
@@ -32,4 +31,5 @@ def main():
     wsgiref.handlers.CGIHandler().run(application)
 
 if __name__ == '__main__':
+    import_wrapper.fix_sys_path()
     main()

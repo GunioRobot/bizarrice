@@ -1,8 +1,8 @@
+import import_wrapper
 import datetime
 import config
 import logging
 
-from dateutil import parser
 from smartypants import smartyPants
 from google.appengine.api import memcache
 from google.appengine.api import urlfetch
@@ -54,6 +54,8 @@ def tz_date(date, fmt="%F %d %Y %H:%M"):
                                   'Falling back to UTC.' % zone)
                     tz = utc
                 else:
+                    import_wrapper.load_zip('dateutil')
+                    from dateutil import parser
                     logging.info(json['datetime'])
                     date = parser.parse(json['datetime'])
                     tz = date.tzinfo

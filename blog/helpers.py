@@ -1,7 +1,7 @@
-import import_wrapper
 import config
 import logging
 import xmlrpclib
+import xmlrpc
 
 from xmlrpc import GoogleXMLRPCTransport
 from urllib import urlencode

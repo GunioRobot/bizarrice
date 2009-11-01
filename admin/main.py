@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-import config
 import import_wrapper
+import config
 import wsgiref.handlers
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
@@ -26,4 +26,5 @@ def main():
     wsgiref.handlers.CGIHandler().run(application)
 
 if __name__ == '__main__':
+    import_wrapper.fix_sys_path()
     main()
