@@ -50,7 +50,7 @@ def _jsontime_timezone(zone):
                 logging.error('Invalid timezone "%s" in config.py. '
                               'Falling back to UTC.' % zone)
             else:
-                logging.info(json['datetime'])
+                from dateutil import parser
                 date = parser.parse(json['datetime'])
                 tz = date.tzinfo
     return tz
