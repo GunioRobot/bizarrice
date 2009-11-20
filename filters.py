@@ -24,7 +24,7 @@ class UTC(datetime.tzinfo):
         return datetime.timedelta(0)
 
     def tzname(self, dt):
-        return 'UTF'
+        return 'UTC'
 
     def dst(self, dt):
         return datetime.timedelta(0)
