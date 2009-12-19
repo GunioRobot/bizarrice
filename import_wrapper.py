@@ -7,6 +7,7 @@ def setup_gae_dev():
     """Sets up PYTHONPATH to allow importing gae modules."""
     try:
         import google
+        import yaml
     except ImportError:
         import re
         gaepath = re.compile(r'google[-_]appengine')
