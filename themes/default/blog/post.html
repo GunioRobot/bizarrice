@@ -1,6 +1,12 @@
 {% extends "../base.html" %}
 
-{% block description %}{{ post.title }} - post on {{ config.title }}{% if post.tags %} tagged {{ post.tags|join:", " }}{% endif %}{% endblock %}
+{% block description %}{% spaceless %}
+{% if post.description %}
+{{ post.description }}
+{% else %}
+{{ post.title }} - post on {{ config.title }}{% if post.tags %} tagged {{ post.tags|join:", " }}{% endif %}
+{% endif %}
+{% endspaceless %}{% endblock %}
 {% block title %}{{ post.title }}{% endblock %}
 {% block head %}
 {% if config.disqus and config.debug %}

@@ -11,6 +11,7 @@ from blog import utils
 class Publishable(polymodel.PolyModel):
     title = db.StringProperty(required=True)
     slug = db.StringProperty()
+    description = db.StringProperty() # Used as meta
     pub_date = db.DateTimeProperty(auto_now_add=True)
     updated = db.DateTimeProperty(auto_now=True)
     author = db.UserProperty(auto_current_user_add=True)
