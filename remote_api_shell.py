@@ -18,7 +18,7 @@
 """An interactive python shell that uses remote_api.
 
 Usage:
-  remote_api_shell.py [-s HOSTNAME] APPID [PATH]
+  remote_api_shell.py [-s HOSTNAME] APPID [-p PATH]
 """
 
 
@@ -29,11 +29,6 @@ import optparse
 import os
 import sys
 import re
-
-try:
-    import readline
-except ImportError:
-    readline = None
 
 import import_wrapper
 import_wrapper.setup_gae_dev()
@@ -53,46 +48,20 @@ BANNER = """App Engine remote_api shell
 Python %s
 The db, users, urlfetch, and memcache modules are imported.""" % sys.version
 
-
 def auth_func():
     return (raw_input('Email: '), getpass.getpass('Password: '))
 
+def bpython_shell():
+    from bpython import cli
+    cli.main(args=[])
 
-def main(argv):
-    parser = optparse.OptionParser()
-    parser.add_option('-s', '--server', dest='server',
-                      help='The hostname your app is deployed on. '
-                           'Defaults to <app_id>.appspot.com.')
-    (options, args) = parser.parse_args()
+def ipython_shell():
+    import IPython
+    shell = IPython.Shell.IPShell(argv=[])
+    shell.mainloop(banner=BANNER)
 
-    if not args or len(args) > 2:
-        import sys
-        print >> sys.stderr, __doc__
-        if len(args) > 2:
-          print >> sys.stderr, 'Unexpected arguments: %s' % args[2:]
-        sys.exit(1)
-
-    appid = args[0]
-    if len(args) == 2:
-        path = args[1]
-    else:
-        path = DEFAULT_PATH
-
-    remote_api_stub.ConfigureRemoteApi(appid, path, auth_func,
-                                       servername=options.server)
-    remote_api_stub.MaybeInvokeAuthentication()
-
-    import os
-    os.environ['SERVER_SOFTWARE'] = 'Development (remote_api_shell)/1.0'
-    # Import the 'see' helper, if it's available
-    try:
-        from see import see
-    except ImportError:
-        pass
-
-    # Make sure modules in the current directory can't interfere
-
-    try:
+def plain_shell():
+    try: #{{{ trying to setup tab completion
         import readline
     except ImportError:
         import sys
@@ -118,20 +87,49 @@ def main(argv):
         history_path = os.path.expanduser(HISTORY_PATH)
         atexit.register(lambda: readline.write_history_file(history_path))
         if os.path.isfile(history_path):
-            readline.read_history_file(history_path)
-
-    try:
+            readline.read_history_file(history_path)#}}}
+    try: #{{{ setup source view, code highlight, etc
         _pythonrc()
         del _pythonrc
     except:
-        pass
-
-
+        pass#}}}
     import sys
     sys.ps1 = '%s> ' % appid
     sys.ps2 = '%s| ' % re.sub('\w', ' ', appid)
-
     code.interact(banner=BANNER, local=globals())
+
+def main(argv):
+    parser = optparse.OptionParser()
+    parser.add_option('-s', '--server', dest='server',
+                      help='The hostname your app is deployed on. '
+                           'Defaults to <app_id>.appspot.com.')
+    parser.add_option('-p', '--path', dest='path', default=DEFAULT_PATH,
+                      help='The RemoteAPI path on your deployed app. '
+                           'Defaults to /remote_api.')
+    (options, args) = parser.parse_args()
+
+    if not args or len(args) > 1:
+        import sys
+        print >> sys.stderr, __doc__
+        if len(args) > 1:
+          print >> sys.stderr, 'Unexpected arguments: %s' % args[1:]
+        sys.exit(1)
+    appid = args[0]
+
+    remote_api_stub.ConfigureRemoteApi(appid, options.path, auth_func,
+                                       servername=options.server)
+    remote_api_stub.MaybeInvokeAuthentication()
+
+    import os
+    os.environ['SERVER_SOFTWARE'] = 'Development (remote_api_shell)/1.0'
+
+    try:
+        bpython_shell()
+    except ImportError:
+        try:
+            ipython_shell()
+        except ImportError:
+            plain_shell()
 
 def _pythonrc():
     # Enable readline, tab completion, and history
