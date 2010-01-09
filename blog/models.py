@@ -100,6 +100,12 @@ class Page(Publishable):
         self.test_slug_collision(False)
         return super(Page, self).put()
 
+    def __unicode__(self):
+        ret = '<Page "%s", %s>' % (self.title,
+                                   self.pub_date.strftime('%Y-%m-%d'))
+        return ret.encode('utf8')
+    __repr__ = __unicode__
+
 
 class Post(Publishable):
     markdown_map = (
@@ -144,6 +150,12 @@ class Post(Publishable):
         self._normalize_tags()
         self.test_slug_collision(True)
         return super(Post, self).put()
+
+    def __unicode__(self):
+        ret = u'<Post "%s", %s>' % (self.title,
+                                    self.pub_date.strftime('%Y-%m-%d'))
+        return ret.encode('utf8')
+    __repr__ = __unicode__
 
 
 class SlugConstraintViolation(Exception):

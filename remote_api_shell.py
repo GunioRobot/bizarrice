@@ -51,16 +51,16 @@ The db, users, urlfetch, and memcache modules are imported.""" % sys.version
 def auth_func():
     return (raw_input('Email: '), getpass.getpass('Password: '))
 
-def bpython_shell():
+def bpython_shell(appid=None):
     from bpython import cli
-    cli.main(args=[])
+    cli.main(args=[], banner=BANNER)
 
-def ipython_shell():
+def ipython_shell(appid=None):
     import IPython
     shell = IPython.Shell.IPShell(argv=[])
     shell.mainloop(banner=BANNER)
 
-def plain_shell():
+def plain_shell(appid):
     try: #{{{ trying to setup tab completion
         import readline
     except ImportError:
@@ -124,12 +124,12 @@ def main(argv):
     os.environ['SERVER_SOFTWARE'] = 'Development (remote_api_shell)/1.0'
 
     try:
-        bpython_shell()
+        bpython_shell(appid)
     except ImportError:
         try:
-            ipython_shell()
+            ipython_shell(appid)
         except ImportError:
-            plain_shell()
+            plain_shell(appid)
 
 def _pythonrc():
     # Enable readline, tab completion, and history
