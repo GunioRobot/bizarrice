@@ -35,7 +35,7 @@ def with_link(funct):
     """Credits: http://blog.notdot.net/"""
     def decorate(self, year=None, month=None, day=None, slug=None):
         link = None
-        if link is not None:
+        if slug is not None:
             link = get_link(year, month, day, slug)
             if link is None:
                 view.Renderer().render_error(self, 404)
@@ -108,7 +108,7 @@ def get_link(year, month, day, slug): #{{{
         end_date = start_date + time_delta
 
         # Fetch the link based on the timespan
-        query = blog.link.all()
+        query = blog.Link.all()
         query.filter('pub_date >= ', start_date)
         query.filter('pub_date < ', end_date)
         query.filter('slug = ', slug)

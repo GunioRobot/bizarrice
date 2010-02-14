@@ -15,6 +15,7 @@ class Publishable(polymodel.PolyModel): #{{{ Publishable Base Class
     pub_date = db.DateTimeProperty(auto_now_add=True)
     updated = db.DateTimeProperty(auto_now=True)
     author = db.UserProperty(auto_current_user_add=True)
+    has_comments = False
 
     def update_markdown_fields(self):
         import import_wrapper
@@ -88,7 +89,7 @@ class Link(Publishable): #{{{ Link Model
                                        self.slug)
 
     def get_absolute_url(self):
-        return "/%s" % self.slug
+        return "%s" % self.url
 
     def get_edit_url(self):
         if not self.is_saved():
@@ -161,6 +162,7 @@ class Post(Publishable): #{{{ Post Model
     excerpt_html = db.TextProperty(default=None)
     body_html = db.TextProperty()
     tags = db.StringListProperty()
+    has_comments = True
 
     def get_absolute_url(self):
         return "/%04d/%02d/%02d/%s" % (self.pub_date.year,

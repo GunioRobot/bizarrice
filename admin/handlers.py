@@ -14,6 +14,7 @@ class AdminHandler(webapp.RequestHandler):
         template_values = {
             'posts': blog.Post.all().order('-pub_date'),
             'pages': blog.Page.all().order('index'),
+            'links': blog.Link.all().order('-pub_date'),
         }
         renderer = view.Renderer()
         renderer.render(self, 'admin/index.html',
