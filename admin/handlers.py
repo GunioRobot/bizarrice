@@ -112,3 +112,46 @@ class DeletePostHandler(webapp.RequestHandler):
         self.redirect('/admin/')
 #}}}
 
+#{{{ Link Handlers
+class LinkHandler(webapp.RequestHandler):
+    def render_form(self, link=None, form=None):
+        template_values = {
+            'link': link,
+            'form': form,
+        }
+        renderer = view.Renderer()
+        renderer.render(self, 'admin/link_form.html',
+                        template_values)
+
+    @blog.utils.with_link
+    def get(self, link):
+        self.render_form(link, blog.LinkForm(instance=link))
+
+    @blog.utils.with_link
+    def post(self, link):
+        form = blog.LinkForm(data=self.request.POST, instance=link)
+        if self.request.get('submit') == 'Submit' and form.is_valid():
+            link = form.save(commit=False)
+            try:
+                link.put()
+            except blog.models.SlugConstraintViolation:
+                logging.error('Slug "%s" is not unique' % link.slug)
+                # TODO: provide error feedback through a rails-like flash
+                self.render_form(link, form)
+            else:
+                blog.helpers.ping_services()
+                self.redirect(config.url)
+        else:
+            if form.is_valid():
+                link = form.save(commit=False)
+                link.update_markdown_fields()
+            self.render_form(link, form)
+
+
+class DeleteLinkHandler(webapp.RequestHandler):
+    @blog.utils.with_link
+    def get(self, link):
+        link.delete()
+        memcache.flush_all()
+        self.redirect('/admin/')
+#}}}
