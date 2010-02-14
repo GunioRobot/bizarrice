@@ -12,7 +12,7 @@ from google.appengine.api import memcache
 
 class IndexHandler(webapp.RequestHandler): #{{{
     def get(self):
-        query = blog.Post.all()
+        query = blog.Publishable.all()
         query.order('-pub_date')
 
         template_values = {
@@ -157,7 +157,7 @@ class AtomHandler(webapp.RequestHandler): #{{{
     def get(self):
         template_values = memcache.get('atom')
         if template_values is None:
-            query = blog.Post.all().order('-pub_date')
+            query = blog.Publishable.all().order('-pub_date')
             posts = query.fetch(1000)
             template_values = {
                 'posts': posts,

@@ -17,9 +17,9 @@
     <rights type="html"><![CDATA[&amp;copy; 2009 {{config.author}}]]></rights>
     {% for post in posts %}
     <entry>
-        <id>{{ config.url }}{{ post.get_absolute_url }}</id>
+        <id>{{ post|makeurl }}</id>
         <title type="text"><![CDATA[{{post.title}}]]></title>
-        <link href="{{ config.url }}{{ post.get_absolute_url }}" rel="alternate" type="text/html" />
+        <link href="{{ post|makeurl }}" rel="alternate" type="text/html" />
         <updated>{{ post.updated|rfc3339 }}</updated>
         <published>{{ post.pub_date|rfc3339 }}</published>
         <content type="html"><![CDATA[{{ post.body_html }}]]></content>

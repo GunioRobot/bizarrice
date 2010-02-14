@@ -15,6 +15,14 @@ from django.utils.simplejson import decoder
 register = template.create_template_register()
 
 @register.filter
+def makeurl(model):
+    if 'Link' in str(model.__class__):
+        return model.get_absolute_url()
+    else:
+        return '%s%s' % (config.url, model.get_absolute_url())
+
+
+@register.filter
 def rfc3339(date):
     return date.strftime("%Y-%m-%dT%H:%M:%SZ")
 
