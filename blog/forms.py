@@ -9,6 +9,12 @@ class PageForm(djangoforms.ModelForm):
         exclude = ['body_html', '_class', 'author', 'pub_date', 'updated']
 
 
+class LinkForm(djangforms.ModelForm):
+    class Meta():
+        model = blog.Link
+        exclude = ['body_html', '_class', 'author', 'pub_date', 'updated']
+
+
 class PostForm(djangoforms.ModelForm):
     tags = djangoforms.forms.CharField(required=False)
     class Meta():

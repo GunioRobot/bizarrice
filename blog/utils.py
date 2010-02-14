@@ -31,6 +31,18 @@ def with_post(funct):
         funct(self, post)
     return decorate
 
+def with_link(funct):
+    """Credits: http://blog.notdot.net/"""
+    def decorate(self, year=None, month=None, day=None, slug=None):
+        link = None
+        if link is not None:
+            link = get_link(year, month, day, slug)
+            if link is None:
+                view.Renderer().render_error(self, 404)
+                return
+        funct(self, link)
+    return decorate
+
 def markdown(text, **kwargs):
     """Converts given `text` to html using python-markdown.
 
@@ -59,7 +71,7 @@ def slugify(value):
     value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
     return re.sub('[-\s]+', '-', value)
 
-def get_post(year, month, day, slug):
+def get_post(year, month, day, slug): #{{{
     cached_id = 'post/%s/%s/%s/%s' % (year, month, day, slug)
     post = memcache.get(cached_id)
     if post is None:
@@ -80,8 +92,32 @@ def get_post(year, month, day, slug):
         post = query.get()
         memcache.set(cached_id, post)
     return post
+#}}}
 
-def get_page(slug):
+def get_link(year, month, day, slug): #{{{
+    cached_id = 'link/%s/%s/%s/%s' % (year, month, day, slug)
+    link = memcache.get(cached_id)
+    if link is None:
+        year = int(year)
+        month = int(month)
+        day = int(day)
+
+        # Build the time span to check for the given slug
+        start_date = datetime.datetime(year, month, day)
+        time_delta = datetime.timedelta(days=1)
+        end_date = start_date + time_delta
+
+        # Fetch the link based on the timespan
+        query = blog.link.all()
+        query.filter('pub_date >= ', start_date)
+        query.filter('pub_date < ', end_date)
+        query.filter('slug = ', slug)
+        link = query.get()
+        memcache.set(cached_id, link)
+    return link
+#}}}
+
+def get_page(slug): #{{{
     page = memcache.get('page-%s' % slug)
     if page is None:
         query = blog.Page.all()
@@ -89,6 +125,7 @@ def get_page(slug):
         page = query.get()
         memcache.set('page-%s' % slug, page)
     return page
+#}}}
 
 def get_archive_list():
     """Return a list of the archive months and their article counts."""

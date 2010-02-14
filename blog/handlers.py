@@ -10,7 +10,7 @@ from google.appengine.ext import webapp
 from google.appengine.api import memcache
 
 
-class IndexHandler(webapp.RequestHandler):
+class IndexHandler(webapp.RequestHandler): #{{{
     def get(self):
         query = blog.Post.all()
         query.order('-pub_date')
@@ -22,9 +22,9 @@ class IndexHandler(webapp.RequestHandler):
         renderer.render_paginated_query(self, query, 'posts',
                                         'blog/index.html',
                                         template_values)
+#}}}
 
-
-class PageHandler(webapp.RequestHandler):
+class PageHandler(webapp.RequestHandler): #{{{
     @with_page
     def get(self, page):
         template_values = {
@@ -32,9 +32,9 @@ class PageHandler(webapp.RequestHandler):
         }
         renderer = view.Renderer()
         renderer.render(self, 'blog/page.html', template_values)
+#}}}
 
-
-class PostHandler(webapp.RequestHandler):
+class PostHandler(webapp.RequestHandler): #{{{
     @with_post
     def get(self, post):
         template_values = {
@@ -42,9 +42,9 @@ class PostHandler(webapp.RequestHandler):
         }
         renderer = view.Renderer()
         renderer.render(self, 'blog/post.html', template_values)
+#}}}
 
-
-class TagHandler(webapp.RequestHandler):
+class TagHandler(webapp.RequestHandler): #{{{
     def get(self, tag):
         query = blog.Post.all()
         query.filter('tags = ', tag)
@@ -59,9 +59,9 @@ class TagHandler(webapp.RequestHandler):
         renderer.render_paginated_query(self, query, 'posts',
                                         'blog/index.html',
                                         template_values)
+#}}}
 
-
-class YearHandler(webapp.RequestHandler):
+class YearHandler(webapp.RequestHandler): #{{{
     def get(self, year):
         year = int(year)
 
@@ -84,9 +84,9 @@ class YearHandler(webapp.RequestHandler):
         renderer.render_paginated_query(self, query, 'posts',
                                         'blog/index.html',
                                         template_values)
+#}}}
 
-
-class MonthHandler(webapp.RequestHandler):
+class MonthHandler(webapp.RequestHandler): #{{{
     def get(self, year, month):
         year = int(year)
         month = int(month)
@@ -113,9 +113,9 @@ class MonthHandler(webapp.RequestHandler):
         renderer.render_paginated_query(self, query, 'posts',
                                         'blog/index.html',
                                         template_values)
+#}}}
 
-
-class DayHandler(webapp.RequestHandler):
+class DayHandler(webapp.RequestHandler): #{{{
     def get(self, year, month, day):
         year = int(year)
         month = int(month)
@@ -142,23 +142,23 @@ class DayHandler(webapp.RequestHandler):
         renderer.render_paginated_query(self, query, 'posts',
                                         'blog/index.html',
                                         template_values)
+#}}}
 
-
-class FeedburnerHandler(webapp.RequestHandler):
+class FeedburnerHandler(webapp.RequestHandler): #{{{
     def get(self):
         if not config.feedburner:
             self.redirect("/atom.xml", permanent=True)
         else:
             self.redirect("http://feeds.feedburner.com/caioromao",
                           permanent=True)
+#}}}
 
-
-class AtomHandler(webapp.RequestHandler):
+class AtomHandler(webapp.RequestHandler): #{{{
     def get(self):
         template_values = memcache.get('atom')
         if template_values is None:
             query = blog.Post.all().order('-pub_date')
-            posts = query.fetch(10)
+            posts = query.fetch(1000)
             template_values = {
                 'posts': posts,
                 'updated': posts[0].updated,
@@ -167,9 +167,9 @@ class AtomHandler(webapp.RequestHandler):
         renderer = view.Renderer()
         self.response.headers["Content-Type"] = "application/atom+xml"
         renderer.render(self, 'blog/atom.xml', template_values)
+#}}}
 
-
-class SitemapHandler(webapp.RequestHandler):
+class SitemapHandler(webapp.RequestHandler): #{{{
     def get(self):
         sitemap = memcache.get('sitemap.xml')
         if sitemap is None:
@@ -184,3 +184,4 @@ class SitemapHandler(webapp.RequestHandler):
                                                      template_values)
             memcache.set('sitemap.xml', sitemap)
         self.response.out.write(sitemap)
+#}}}
