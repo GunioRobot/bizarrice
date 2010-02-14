@@ -9,7 +9,7 @@ class PageForm(djangoforms.ModelForm):
         exclude = ['body_html', '_class', 'author', 'pub_date', 'updated']
 
 
-class LinkForm(djangforms.ModelForm):
+class LinkForm(djangoforms.ModelForm):
     class Meta():
         model = blog.Link
         exclude = ['body_html', '_class', 'author', 'pub_date', 'updated']
