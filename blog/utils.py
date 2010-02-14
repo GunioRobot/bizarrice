@@ -138,8 +138,8 @@ def get_archive_list():
     if archive is not None:
         return archive
 
-    # Get the date of the oldest post
-    query = db.Query(blog.Post)
+    # Get the date of the oldest entry
+    query = db.Query(blog.Publishable)
     query.order('pub_date')
     oldest = query.get()
 
@@ -157,13 +157,13 @@ def get_archive_list():
     end_date = datetime.date(end_date.year, end_date.month, 1) + plus_one_month
 
     # Loop through each month in the time span and count the number
-    # of posts made in that month
+    # of entries made in that month
     archive = []
     current_date = start_date
     while current_date < end_date:
         next_date = current_date + plus_one_month
 
-        query = db.Query(blog.Post)
+        query = db.Query(blog.Publishable)
         query.filter('pub_date >= ', current_date)
         query.filter('pub_date < ', next_date)
 
