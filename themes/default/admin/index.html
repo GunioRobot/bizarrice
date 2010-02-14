@@ -7,12 +7,19 @@
     <ul>
         <li><a href="/admin/post/new" title="Create a new post">Write a Post</a></li>
         <li><a href="/admin/page/new" title="Create a new page">Create a Page</a></li>
+        <li><a href="/admin/link/new" title="Create a new link">Publish a Link</a></li>
     </ul>
     <h2>Editing</h2>
     <h3>Posts</h3>
     <ul>
         {% for post in posts %}
         <li><a href="{{ post.get_edit_url }}" title="Edit post: {{ post.title }}">{{ post.title }}</a></li>
+        {% endfor %}
+    </ul>
+    <h3>Links</h3>
+    <ul>
+        {% for link in links %}
+        <li><a href="{{ link.get_edit_url }}" title="Edit post: {{ link.title }}">{{ link.title }}</a></li>
         {% endfor %}
     </ul>
     <h3>Pages</h3>
