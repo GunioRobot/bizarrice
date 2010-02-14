@@ -8,7 +8,7 @@ from google.appengine.api import memcache
 from blog import utils
 
 
-class Publishable(polymodel.PolyModel):
+class Publishable(polymodel.PolyModel): #{{{ Publishable Base Class
     title = db.StringProperty(required=True)
     slug = db.StringProperty()
     description = db.StringProperty() # Used as meta
@@ -70,9 +70,52 @@ class Publishable(polymodel.PolyModel):
 
     def clear_cache(self):
         memcache.delete('sitemap.xml')
+#}}}
 
+class Link(Publishable): #{{{ Link Model
+    markdown_map = (
+        ('body', 'body_html'),
+    )
+    body = db.TextProperty(required=True)
+    body_html = db.TextProperty()
+    url = db.LinkProperty(required=True)
 
-class Page(Publishable):
+    def _get_internal_url(self):
+        # NOTE: this is *not* rendered
+        return "/%04d/%02d/%02d/%s" % (self.pub_date.year,
+                                       self.pub_date.month,
+                                       self.pub_date.day,
+                                       self.slug)
+
+    def get_absolute_url(self):
+        return "/%s" % self.slug
+
+    def get_edit_url(self):
+        if not self.is_saved():
+            return '/admin/link/new'
+        else:
+            return "/admin/link/edit%s" % self._get_internal_url()
+
+    def clear_cache(self):
+        # Delete the cached archive list if we are saving a new link
+        if not self.is_saved():
+            memcache.delete('archive_list')
+        memcache.delete('atom')
+        memcache.delete('link_list')
+        memcache.delete('link%s' % self._get_internal_url())
+        super(Link, self).clear_cache()
+
+    def put(self):
+        self.test_slug_collision(limit_by_day=True)
+        return super(Link, self).put()
+
+    def __unicode__(self):
+        ret = '<Link "%s", %s>' % (self.title, self.url)
+        return ret.encode('utf8')
+    __repr__ = __unicode__
+#}}}
+
+class Page(Publishable): #{{{ Page Model
     markdown_map = (
         ('body', 'body_html'),
     )
@@ -93,7 +136,7 @@ class Page(Publishable):
 
     def clear_cache(self):
         memcache.delete('page_list')
-        memcache.delete('page%s' % self.get_absolute_url)
+        memcache.delete('page%s' % self.get_absolute_url())
         super(Page, self).clear_cache()
 
     def put(self):
@@ -105,9 +148,9 @@ class Page(Publishable):
                                    self.pub_date.strftime('%Y-%m-%d'))
         return ret.encode('utf8')
     __repr__ = __unicode__
+#}}}
 
-
-class Post(Publishable):
+class Post(Publishable): #{{{ Post Model
     markdown_map = (
         ('body', 'body_html'),
         ('excerpt', 'excerpt_html'),
@@ -156,7 +199,7 @@ class Post(Publishable):
                                     self.pub_date.strftime('%Y-%m-%d'))
         return ret.encode('utf8')
     __repr__ = __unicode__
-
+#}}}
 
 class SlugConstraintViolation(Exception):
     def __init__(self, slug, date=None):
