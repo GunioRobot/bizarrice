@@ -1,0 +1,40 @@
+{% extends "../base.html" %}
+
+{% block description %}{% spaceless %}
+{% if post.description %}
+{{ post.description }}
+{% else %}
+{{ post.title }} - post on {{ config.title }}{% if post.tags %} tagged {{ post.tags|join:", " }}{% endif %}
+{% endif %}
+{% endspaceless %}{% endblock %}
+{% block title %}{{ post.title }}{% endblock %}
+{% block head %}
+{% if config.disqus and config.debug %}
+<script type="text/javascript">
+    var disqus_developer=1;
+</script>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<article>
+    <header>
+    {% if user_is_admin %}<a style="float:right;" href="{{ post.get_edit_url }}" title="Edit this post">Edit this Post</a><br />{% endif %}
+    <h1><a href="{{config.url}}{{ post.get_absolute_url }}" title="{{ post.title }}">{{ post.title|smartypants }}</a></h1>
+    </header>
+    <div class="post">
+        {{ post.body_html }}
+        <footer><p>
+        Published on {{post.pub_date|tz_date:"%Y-%m-%d"}} at <abbr title="{{ post.pub_date|rfc3339 }}">{{ post.pub_date|tz_date:"%H:%M:%S" }}</abbr>, by <a href="{{config.url}}" title="{{config.title}}">{{ config.author }}</a><br />
+        Tagged:{% for tag in post.tags %} <a href="/tag/{{ tag }}">{{ tag }}</a>{% endfor %}<br />
+        <a href="{{config.url}}{{ post.get_absolute_url }}" rel="bookmark" title="Permalink to {{ post.title }}">permalink</a>
+        </p></footer>
+    </div>
+    {% if config.disqus and post.has_comments %}
+        <div id="disqus_thread">
+        <script type="text/javascript" src="http://disqus.com/forums/{{ config.disqus }}/embed.js"></script>
+        <noscript><a href="http://{{ config.disqus }}.disqus.com/?url=ref">View the discussion.</a></noscript>
+        </div>
+        {% endif %}
+</article>
+{% endblock %}

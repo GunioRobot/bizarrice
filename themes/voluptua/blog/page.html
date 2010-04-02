@@ -1,0 +1,21 @@
+{% extends "../base.html" %}
+
+{% block description %}{% spaceless %}
+{% if page.description %}
+{{ page.description }}
+{% else %}
+{{ page.title }} - page on {{ config.title }}
+{% endif %}
+{% endspaceless %}{% endblock %}
+{% block title %}{{ page.title }}{% endblock %}
+
+{% block content %}
+<article>
+<header>
+    <h1><a href="{{config.url}}{{ page.get_absolute_url }}" title="{{ page.title }}">{{ page.title|smartypants }}</a></h1>
+</header>
+    <div class="post">
+        {{ page.body_html }}
+    </div>
+</article>
+{% endblock %}

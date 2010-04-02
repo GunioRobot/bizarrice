@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block title %}{% endblock %} | {{ config.title }}</title>
+    <link rel="stylesheet" href="/static/voluptua/css/style.css" type="text/css" media="screen, projection" />
+    <link rel="stylesheet" href="/static/default/css/tango.css" type="text/css" media="screen, projection" />
+    <link rel="alternate" href="/feed" type="application/atom+xml" title="{{ config.title }} Atom Feed" />
+    <meta name="description" content="{% block description %}{{config.description}}{% endblock %}" />
+    <meta name="keywords" content="{{config.keywords}}" />
+    <meta name="author" content="{{config.author}}" />
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <meta charset="utf-8" />
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <nav>
+    <div id="nav">
+        <a href="/" title="{{ config.title }}">Home</a> {% if user_is_admin %}| <a href="/admin/" title="Administration Panel">Admin</a>{% endif %}{% if page_list %} | {{page_list|links_for_models:" | "|smartypants}}{% endif %}{% block sidebar %}{% endblock %} | <a href="/feed" title="{{config.title}} Atom feed">Feed</a>
+    </div>
+    </nav>
+    <header><div id="header">
+        {% block header%}
+        <h1><a class="title" href="/">{{ config.title|smartypants }}</a></h1>
+        {% endblock %}
+    </div></header>
+    <div id="container">
+        <div id="entries">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+    <footer><div id="footer">
+        <a href="#nav" title="Back to Top">&uArr;</a> <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/br/" title="Creative Commons Attribution-Noncommercial-Share Alike 3.0 Unported">Some rights reserved &copy;</a> | Original theme by <a href="http://www.upstartblogger.com" title="Upstart Blogger">Ashley Morgan</a> | Powered by <a href="http://code.google.com/appengine/" title="Google App Engine">AppEngine</a>
+    </div></footer>
+    {% block bodyend %}{% endblock %}
+    {% if config.google_analytics %}
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', '{{ config.google_analytics }}']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+         var ga = document.createElement('script');
+         ga.src = ('https:' == document.location.protocol ? 'https://ssl' :
+             'http://www') + '.google-analytics.com/ga.js';
+         ga.setAttribute('async', 'true');
+         document.documentElement.firstChild.appendChild(ga);
+         })();
+    </script>
+    {% endif %}
+</body>
+</html>

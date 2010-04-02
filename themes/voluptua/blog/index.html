@@ -1,0 +1,61 @@
+{% extends "../base.html" %}
+
+{% block title %}{% if page_title %}{{ page_title }}{% else %}Index{% endif %}{% endblock %}
+
+{% block content %}
+    {% if page_description %}
+        <h2 class="page-description">{{ page_description }}</h2>
+    {% endif %}
+    {% if posts %}
+        {% for post in posts %}
+        <article>
+        <header>
+        <h1><a href="{{ post.get_absolute_url }}">{{ post.title|smartypants }}</a></h1>
+        </header>
+        <div class="post">
+            {% ifnotequal post.excerpt None %}
+            {{ post.excerpt_html }}
+            <div class="readmore"><a href="{{ post.get_absolute_url }}">Read more</a></div>
+            {% else %}
+            {{ post.body_html }}
+            {% endifnotequal %}
+            <footer><p>
+            Published <abbr title="{{ post.pub_date|rfc3339 }}">{{ post.pub_date|date_diff}}</abbr>, by <a href="{{config.url}}" title="{{config.title}}">{{ config.author }}</a><br />
+            Tags:{% for tag in post.tags %} <a href="/tag/{{ tag }}">{{ tag }}</a>{% endfor %}
+            {% if config.disqus and post.has_comments %}<br /><a href="{{config.url}}{{post.get_absolute_url}}#disqus_thread">Comments</a>{% endif %}
+            </p></footer>
+        </div>
+        </article>
+        {% endfor %}
+    {% else %}
+    <div class="post">
+        <h2>No Posts Found</h2>
+    </div>
+    {% endif %}
+    {% if prev_page or next_page %}
+        {% if prev_page %}
+        &laquo; <a class="pagination" href="?page={{ prev_page }}">Previous</a>
+        {% endif %}
+        {% if next_page %}
+        <a class="pagination" href="?page={{ next_page }}">Next</a> &raquo;
+        {% endif %}
+    {% endif %}
+{% endblock %}
+{% if config.disqus %}
+{% block bodyend %}
+<script type="text/javascript">
+//<![CDATA[
+(function() {
+	var links = document.getElementsByTagName('a');
+	var query = '?';
+	for(var i = 0; i < links.length; i++) {
+	if(links[i].href.indexOf('#disqus_thread') >= 0) {
+		query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
+	}
+	}
+	document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/caio/get_num_replies.js' + query + '"></' + 'script>');
+})();
+//]]>
+</script>
+{% endblock %}
+{% endif %}
