@@ -38,7 +38,7 @@ body {
     text-align: center;
 }
 
-nav #nav a { font-weight: normal; }
+nav #nav a { font-weight: bold; }
 
 #header {
 	width: 960px;
@@ -60,7 +60,7 @@ nav #nav a { font-weight: normal; }
 
 article footer p {
     text-align: center;
-    border-top: 1px dashed black;
+    border-top: 1px dashed silver;
 }
 
 footer #footer {
@@ -156,11 +156,18 @@ h1 {
 	padding-bottom: 0px;
 	font-weight: bold;
 	letter-spacing: -3px;
+    text-shadow: 0px 2px 3px #555;
 }
 
 .title {
 	border-bottom: 1px solid silver;
+    color: #db1750;
+    text-shadow: 0px 2px 3px #555;
+    font-size: 1.2em;
 }
+
+.title:hover { color: #silver; }
+
 
 h2 {
 	font-weight: bold;
