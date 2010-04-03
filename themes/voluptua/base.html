@@ -15,7 +15,13 @@
 <body>
     <nav>
     <div id="nav">
-        <a href="/" title="{{ config.title }}">Home</a> {% if user_is_admin %}| <a href="/admin/" title="Administration Panel">Admin</a>{% endif %}{% if page_list %} | {{page_list|links_for_models:" | "|smartypants}}{% endif %}{% block sidebar %}{% endblock %} | <a href="/feed" title="{{config.title}} Atom feed">Feed</a>
+        <ul>
+            <li><a href="/" title="{{ config.title }}">Home</a></li> |
+            {% if user_is_admin %} <li><a href="/admin/" title="Administration Panel">Admin</a></li> |{% endif %}
+            {% if page_list %} {{page_list|li_links_for_models:" | "|smartypants}} | {% endif %}
+            {% block sidebar %}{% endblock %}
+            <li><a href="/feed" title="{{config.title}} Atom feed">Feed</a></li>
+        </ul>
     </div>
     </nav>
     <header><div id="header">

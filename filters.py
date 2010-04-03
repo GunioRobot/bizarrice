@@ -118,11 +118,11 @@ def date_diff(d):
     return ('%d %s ago') % (count, name(count))
 
 @register.filter
-def links_for_models(model_list, separator=None, use_ul=False):
+def links_for_models(model_list, separator=None, use_li=False):
     fmt = ('%(before)s<a href="%(link)s" '
            'title="%(title)s">%(title)s</a>%(after)s')
-    if use_ul:
-        values = dict(begin='<ul>', end='</ul>', before='<li>', after='</li>')
+    if use_li:
+        values = dict(begin='', end='', before='<li>', after='</li>')
     else:
         values = dict(begin='', end='', before='', after='')
     if separator is None:
@@ -137,7 +137,7 @@ def links_for_models(model_list, separator=None, use_ul=False):
     return '%(begin)s%(result)s%(end)s' % values
 
 @register.filter
-def ul_links_for_models(model_list, separator=None):
+def li_links_for_models(model_list, separator=None):
     return links_for_models(model_list, separator, True)
 
 @register.filter

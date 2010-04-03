@@ -40,6 +40,8 @@ body {
 
 nav #nav a { font-weight: bold; }
 
+nav #nav ul li { display: inline; }
+
 #header {
 	width: 960px;
     font-size: .5em;
