@@ -137,7 +137,7 @@ class Page(Publishable): #{{{ Page Model
 
     def clear_cache(self):
         memcache.delete('page_list')
-        memcache.delete('page%s' % self.get_absolute_url())
+        memcache.delete('page-%s' % self.slug)
         super(Page, self).clear_cache()
 
     def put(self):
