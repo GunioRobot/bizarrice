@@ -48,7 +48,7 @@ class TocTreeprocessor(markdown.treeprocessors.Treeprocessor):
             # validation by putting a <div> inside of a <p>
             # we actually replace the <p> in its entirety.
             # We do not allow the marker inside a header as that
-            # would causes an enless loop of placing a new TOC 
+            # would causes an enless loop of placing a new TOC
             # inside previously generated TOC.
 
             if c.text.find(self.config["marker"][0]) > -1 and not header_rgx.match(c.tag):
@@ -56,10 +56,10 @@ class TocTreeprocessor(markdown.treeprocessors.Treeprocessor):
                     if p[i] == c:
                         p[i] = div
                         break
-                    
+
             if header_rgx.match(c.tag):
                 tag_level = int(c.tag[-1])
-                
+
                 while tag_level < level:
                     list_stack.pop()
                     level -= 1
@@ -73,7 +73,7 @@ class TocTreeprocessor(markdown.treeprocessors.Treeprocessor):
                     list_stack.append(newlist)
                     level += 1
 
-                # Do not override pre-existing ids 
+                # Do not override pre-existing ids
                 if not "id" in c.attrib:
                     id = self.config["slugify"][0](c.text)
                     if id in used_ids:
@@ -103,7 +103,7 @@ class TocTreeprocessor(markdown.treeprocessors.Treeprocessor):
 
 class TocExtension(markdown.Extension):
     def __init__(self, configs):
-        self.config = { "marker" : ["[TOC]", 
+        self.config = { "marker" : ["[TOC]",
                             "Text to find and replace with Table of Contents -"
                             "Defaults to \"[TOC]\""],
                         "slugify" : [self.slugify,
@@ -131,6 +131,6 @@ class TocExtension(markdown.Extension):
         tocext = TocTreeprocessor(md)
         tocext.config = self.config
         md.treeprocessors.add("toc", tocext, "_begin")
-	
+
 def makeExtension(configs={}):
     return TocExtension(configs=configs)

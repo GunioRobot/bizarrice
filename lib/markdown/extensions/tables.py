@@ -23,8 +23,8 @@ class TableProcessor(markdown.blockprocessors.BlockProcessor):
 
     def test(self, parent, block):
         rows = block.split('\n')
-        return (len(rows) > 2 and '|' in rows[0] and 
-                '|' in rows[1] and '-' in rows[1] and 
+        return (len(rows) > 2 and '|' in rows[0] and
+                '|' in rows[1] and '-' in rows[1] and
                 rows[1][0] in ['|', ':', '-'])
 
     def run(self, parent, blocks):
@@ -62,7 +62,7 @@ class TableProcessor(markdown.blockprocessors.BlockProcessor):
         if parent.tag == 'thead':
             tag = 'th'
         cells = self._split_row(row, border)
-        # We use align here rather than cells to ensure every row 
+        # We use align here rather than cells to ensure every row
         # contains the same number of columns.
         for i, a in enumerate(align):
             c = etree.SubElement(tr, tag)
@@ -88,7 +88,7 @@ class TableExtension(markdown.Extension):
 
     def extendMarkdown(self, md, md_globals):
         """ Add an instance of TableProcessor to BlockParser. """
-        md.parser.blockprocessors.add('table', 
+        md.parser.blockprocessors.add('table',
                                       TableProcessor(md.parser),
                                       '<hashheader')
 

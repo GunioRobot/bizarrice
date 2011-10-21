@@ -4,7 +4,7 @@ PRE-PROCESSORS
 =============================================================================
 
 Preprocessors work on source text before we start doing anything too
-complicated. 
+complicated.
 """
 
 import re
@@ -133,9 +133,9 @@ class HtmlBlockPreprocessor(Preprocessor):
                         left_tag = "--"
                         right_tag, data_index = self._get_right_tag(left_tag, block)
                         # keep checking conditions below and maybe just append
-                    
+
                     if data_index < len(block) \
-                        and markdown.isBlockLevel(left_tag): 
+                        and markdown.isBlockLevel(left_tag):
                         text.insert(0, block[data_index:])
                         block = block[:data_index]
 

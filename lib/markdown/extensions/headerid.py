@@ -57,7 +57,7 @@ Copyright 2007-2008 [Waylan Limberg](http://achinghead.com/).
 Project website: <http://www.freewisdom.org/project/python-markdown/HeaderId>
 Contact: markdown@freewisdom.org
 
-License: BSD (see ../docs/LICENSE for details) 
+License: BSD (see ../docs/LICENSE for details)
 
 Dependencies:
 * [Python 2.3+](http://python.org)
@@ -106,7 +106,7 @@ class HeaderIdProcessor(markdown.blockprocessors.BlockProcessor):
             # Create header using named groups from RE
             start_level, force_id = self._get_meta()
             level = len(m.group('level')) + start_level
-            if level > 6: 
+            if level > 6:
                 level = 6
             h = markdown.etree.SubElement(parent, 'h%d' % level)
             h.text = m.group('header').strip()
@@ -128,7 +128,7 @@ class HeaderIdProcessor(markdown.blockprocessors.BlockProcessor):
         if hasattr(self.md, 'Meta'):
             if self.md.Meta.has_key('header_level'):
                 level = int(self.md.Meta['header_level'][0]) - 1
-            if self.md.Meta.has_key('header_forceid'): 
+            if self.md.Meta.has_key('header_forceid'):
                 force = self._str2bool(self.md.Meta['header_forceid'][0])
         return level, force
 

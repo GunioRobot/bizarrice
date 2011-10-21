@@ -4,12 +4,12 @@
 HTML Tidy Extension for Python-Markdown
 =======================================
 
-Runs [HTML Tidy][] on the output of Python-Markdown using the [uTidylib][] 
+Runs [HTML Tidy][] on the output of Python-Markdown using the [uTidylib][]
 Python wrapper. Both libtidy and uTidylib must be installed on your system.
 
-Note than any Tidy [options][] can be passed in as extension configs. So, 
+Note than any Tidy [options][] can be passed in as extension configs. So,
 for example, to output HTML rather than XHTML, set ``output_xhtml=0``. To
-indent the output, set ``indent=auto`` and to have Tidy wrap the output in 
+indent the output, set ``indent=auto`` and to have Tidy wrap the output in
 ``<html>`` and ``<body>`` tags, set ``show_body_only=0``.
 
 [HTML Tidy]: http://tidy.sourceforge.net/
@@ -18,7 +18,7 @@ indent the output, set ``indent=auto`` and to have Tidy wrap the output in
 
 Copyright (c)2008 [Waylan Limberg](http://achinghead.com)
 
-License: [BSD](http://www.opensource.org/licenses/bsd-license.php) 
+License: [BSD](http://www.opensource.org/licenses/bsd-license.php)
 
 Dependencies:
 * [Python2.3+](http://python.org)
@@ -54,8 +54,8 @@ class TidyProcessor(markdown.postprocessors.Postprocessor):
     def run(self, text):
         # Pass text to Tidy. As Tidy does not accept unicode we need to encode
         # it and decode its return value.
-        return unicode(tidy.parseString(text.encode('utf-8'), 
-                                        **self.markdown.tidy_options)) 
+        return unicode(tidy.parseString(text.encode('utf-8'),
+                                        **self.markdown.tidy_options))
 
 
 def makeExtension(configs=None):

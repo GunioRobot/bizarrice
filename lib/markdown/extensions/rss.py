@@ -50,7 +50,7 @@ class RssExtension (markdown.Extension):
                         'TITLE' : [DEFAULT_TITLE, "Feed title"] }
 
         md.xml_mode = True
-        
+
         # Insert a tree-processor that would actually add the title tag
         treeprocessor = RssTreeProcessor(md)
         treeprocessor.ext = self
@@ -70,14 +70,14 @@ class RssTreeProcessor(markdown.treeprocessors.Treeprocessor):
         for tag, text in (("title", self.ext.getConfig("TITLE")),
                           ("link", self.ext.getConfig("URL")),
                           ("description", None)):
-            
+
             element = etree.SubElement(channel, tag)
             element.text = text
 
         for child in root:
 
             if child.tag in ["h1", "h2", "h3", "h4", "h5"]:
-      
+
                 heading = child.text.strip()
                 item = etree.SubElement(channel, "item")
                 link = etree.SubElement(item, "link")
@@ -105,7 +105,7 @@ class RssTreeProcessor(markdown.treeprocessors.Treeprocessor):
                     pholder = self.markdown.htmlStash.store(
                                                 "<![CDATA[ %s]]>" % content)
                     description.text = pholder
-    
+
         return rss
 
 

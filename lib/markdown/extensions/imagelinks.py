@@ -47,7 +47,7 @@ class ImageLinkPreprocessor(markdown.preprocessors.Preprocessor):
         in_image_block = False
 
         new_lines = []
-        
+
         for line in lines:
 
             if line.startswith("<~~~~~~~"):
@@ -62,7 +62,7 @@ class ImageLinkPreprocessor(markdown.preprocessors.Preprocessor):
             else:
 
                 line = line.strip()
-                
+
                 if line.endswith("~~~~~~>") or not line:
                     in_image_block = False
                     new_block = "<div><br/><center><span class='image-links'>\n"
@@ -75,11 +75,11 @@ class ImageLinkPreprocessor(markdown.preprocessors.Preprocessor):
                             new_block += IMAGE_LINK % (photo_url,
                                                        photo_url.get_thumbnail(),
                                                        title)
-                            
+
                             album_url_hash[str(photo_url.get_album())] = 1
-                        
+
                     new_block += "<br/>"
-                            
+
                     new_block += "</span>"
                     new_block += SLIDESHOW_LINK % url.get_slideshow()
 
@@ -92,7 +92,7 @@ class ImageLinkPreprocessor(markdown.preprocessors.Preprocessor):
                         for i in range(len(album_urls)) :
                             new_block += ALBUM_LINK % (album_urls[i],
                                                        "album %d" % (i + 1) )
-                    
+
                     new_lines.append(new_block + "</center><br/></div>")
 
                 elif line[1:6] == "~~~~~" :
@@ -105,7 +105,7 @@ class ImageLinkPreprocessor(markdown.preprocessors.Preprocessor):
                     album, photo = line.split("/")
                     photo_url = url.get_photo(album, photo,
                                               len(all_images)+1)
-                    all_images.append(photo_url)                        
+                    all_images.append(photo_url)
                     rows[-1].append((photo_url, title))
 
                     if not album in albums :

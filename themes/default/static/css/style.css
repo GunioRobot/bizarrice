@@ -20,14 +20,14 @@ input { border: 1px solid #999; }
 .navright { font-size: 12px; position: relative; float: right; }
 .navcenter { font-size: 12px; text-align:center; width: 500px; }
 .datetime a { color: #666; }
-.post { padding-bottom: 30px; } 
-.short_quote { margin: 0px; padding: 0px; font-size:62px; line-height: 110%; color: #666; } 
-.medium_quote { margin: 0px; padding: 0px; font-size:36px; line-height: 115%; color: #666; } 
-.long_quote { margin: 0px; padding: 0px; font-size:24px; line-height: 130%; color: #666; } 
-a .notes { text-decoration: none !important; background: none; } 
-.notes a { text-decoration: none !important; background: none; } 
-img .notes { margin: 0px; padding: 3px; border: 1px solid #999; } 
-.notes img { margin: 0px; padding: 3px; border: 1px solid #999; } 
+.post { padding-bottom: 30px; }
+.short_quote { margin: 0px; padding: 0px; font-size:62px; line-height: 110%; color: #666; }
+.medium_quote { margin: 0px; padding: 0px; font-size:36px; line-height: 115%; color: #666; }
+.long_quote { margin: 0px; padding: 0px; font-size:24px; line-height: 130%; color: #666; }
+a .notes { text-decoration: none !important; background: none; }
+.notes a { text-decoration: none !important; background: none; }
+img .notes { margin: 0px; padding: 3px; border: 1px solid #999; }
+.notes img { margin: 0px; padding: 3px; border: 1px solid #999; }
 .disqus { font-family: Georgia, 'Times New Roman', Times !important; size: 16px; line-height:150% !important; color:#333 !important; }
 .regular_post_body img { max-width: 100%; }
 #disqus_thread a { text-decoration: none !important; background: #fff !important; }

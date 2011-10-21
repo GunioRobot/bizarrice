@@ -23,17 +23,17 @@ Whitespace behavior:
 
 To define custom settings the simple way:
 
-    >>> markdown.markdown(text, 
+    >>> markdown.markdown(text,
     ...     ['wikilinks(base_url=/wiki/,end_url=.html,html_class=foo)']
     ... )
     u'<p>Some text with a <a class="foo" href="/wiki/WikiLink.html">WikiLink</a>.</p>'
-    
+
 Custom settings the complex way:
 
     >>> md = markdown.Markdown(
-    ...     extensions = ['wikilinks'], 
+    ...     extensions = ['wikilinks'],
     ...     extension_configs = {'wikilinks': [
-    ...                                 ('base_url', 'http://example.com/'), 
+    ...                                 ('base_url', 'http://example.com/'),
     ...                                 ('end_url', '.html'),
     ...                                 ('html_class', '') ]},
     ...     safe_mode = True)
@@ -60,7 +60,7 @@ Define a custom URL builder:
 
     >>> def my_url_builder(label, base, end):
     ...     return '/bar/'
-    >>> md = markdown.Markdown(extensions=['wikilinks'], 
+    >>> md = markdown.Markdown(extensions=['wikilinks'],
     ...         extension_configs={'wikilinks' : [('build_url', my_url_builder)]})
     >>> md.convert('[[foo]]')
     u'<p><a class="wikilink" href="/bar/">foo</a></p>'
@@ -71,7 +71,7 @@ From the command line:
 
 By [Waylan Limberg](http://achinghead.com/).
 
-License: [BSD](http://www.opensource.org/licenses/bsd-license.php) 
+License: [BSD](http://www.opensource.org/licenses/bsd-license.php)
 
 Dependencies:
 * [Python 2.3+](http://python.org)
@@ -96,14 +96,14 @@ class WikiLinkExtension(markdown.Extension):
                         'html_class' : ['wikilink', 'CSS hook. Leave blank for none.'],
                         'build_url' : [build_url, 'Callable formats URL from label.'],
         }
-        
+
         # Override defaults with user settings
         for key, value in configs :
             self.setConfig(key, value)
-        
+
     def extendMarkdown(self, md, md_globals):
         self.md = md
-    
+
         # append to end of inline patterns
         WIKILINK_RE = r'\[\[([A-Za-z0-9_ -]+)\]\]'
         wikilinkPattern = WikiLinks(WIKILINK_RE, self.config)
@@ -115,14 +115,14 @@ class WikiLinks(markdown.inlinepatterns.Pattern):
     def __init__(self, pattern, config):
         markdown.inlinepatterns.Pattern.__init__(self, pattern)
         self.config = config
-  
+
     def handleMatch(self, m):
         if m.group(2).strip():
             base_url, end_url, html_class = self._getMeta()
             label = m.group(2).strip()
             url = self.config['build_url'][0](label, base_url, end_url)
             a = markdown.etree.Element('a')
-            a.text = label 
+            a.text = label
             a.set('href', url)
             if html_class:
                 a.set('class', html_class)
@@ -143,7 +143,7 @@ class WikiLinks(markdown.inlinepatterns.Pattern):
             if self.md.Meta.has_key('wiki_html_class'):
                 html_class = self.md.Meta['wiki_html_class'][0]
         return base_url, end_url, html_class
-    
+
 
 def makeExtension(configs=None) :
     return WikiLinkExtension(configs=configs)

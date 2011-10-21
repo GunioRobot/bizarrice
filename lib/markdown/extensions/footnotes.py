@@ -89,7 +89,7 @@ class FootnoteExtension(markdown.Extension):
                         return (child, element), False
                 finder(child)
             return None
-                
+
         res = finder(root)
         return res
 
@@ -162,9 +162,9 @@ class FootnotePreprocessor(markdown.preprocessors.Preprocessor):
         Keywords:
 
         * lines: A list of lines of text
-        
+
         Return: A list of lines with footnote definitions removed.
-        
+
         """
         i, id, footnote = self._findFootnoteDefinition(lines)
 
@@ -188,9 +188,9 @@ class FootnotePreprocessor(markdown.preprocessors.Preprocessor):
         * lines: A list of lines of text.
 
         Return: A three item tuple containing the index of the first line of a
-        footnote definition, the id of the definition and the body of the 
+        footnote definition, the id of the definition and the body of the
         definition.
-        
+
         """
         counter = 0
         for line in lines:

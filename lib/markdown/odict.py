@@ -1,7 +1,7 @@
 class OrderedDict(dict):
     """
     A dictionary that keeps its keys in the order in which they're inserted.
-    
+
     Copied from Django's SortedDict with some modifications.
 
     """

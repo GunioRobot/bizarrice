@@ -19,7 +19,7 @@ Simple Usage:
 Copyright 2007-2008
 * [Waylan Limberg](http://achinghead.com/)
 * [Seemant Kulleen](http://www.kulleen.org/)
-	
+
 
 '''
 
@@ -35,8 +35,8 @@ class AbbrExtension(markdown.Extension):
     def extendMarkdown(self, md, md_globals):
         """ Insert AbbrPreprocessor before ReferencePreprocessor. """
         md.preprocessors.add('abbr', AbbrPreprocessor(md), '<reference')
-        
-           
+
+
 class AbbrPreprocessor(markdown.preprocessors.Preprocessor):
     """ Abbreviation Preprocessor - parse text for abbr references. """
 
@@ -44,7 +44,7 @@ class AbbrPreprocessor(markdown.preprocessors.Preprocessor):
         '''
         Find and remove all Abbreviation references from the text.
         Each reference is set as a new AbbrPattern in the markdown instance.
-        
+
         '''
         new_text = []
         for line in lines:
@@ -57,14 +57,14 @@ class AbbrPreprocessor(markdown.preprocessors.Preprocessor):
             else:
                 new_text.append(line)
         return new_text
-    
+
     def _generate_pattern(self, text):
         '''
-        Given a string, returns an regex pattern to match that string. 
-        
-        'HTML' -> r'(?P<abbr>[H][T][M][L])' 
-        
-        Note: we force each char as a literal match (in brackets) as we don't 
+        Given a string, returns an regex pattern to match that string.
+
+        'HTML' -> r'(?P<abbr>[H][T][M][L])'
+
+        Note: we force each char as a literal match (in brackets) as we don't
         know what they will be beforehand.
 
         '''

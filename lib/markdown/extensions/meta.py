@@ -80,7 +80,7 @@ class MetaPreprocessor(markdown.preprocessors.Preprocessor):
                     break # no meta data - done
         self.markdown.Meta = meta
         return lines
-        
+
 
 def makeExtension(configs={}):
     return MetaExtension(configs=configs)
